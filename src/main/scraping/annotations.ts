@@ -19,9 +19,16 @@ export class Required {
      */
     static execute(target: any, prop: string, value: any) {
         if (!Reflect.getMetadata(Required.key, target, prop)) return;
-        logger.debug(`required execute. property-name: ${prop}, property-value: ${value}`);
-        if (!value) throw new Error(`${prop} is required!`);
+        logger.debug(`required execute. property-name: ${prop}, property-value: ${JSON.stringify(value)}`);
+        if (!value) throw new Error(`${prop} is required! target: ${JSON.stringify(target)}`);
     }
+}
+/**
+ * フォーマット変換アノテーション引数
+ */
+interface FormatArg {
+    regexp: string;
+    replace?: string;
 }
 
 /**
@@ -35,8 +42,8 @@ export class Format {
      * @param replaceTarget {string} 置換対象(正規表現)
      * @param replaceValue {string} 置換値
      */
-    static annotation(replaceTarget: string, replaceValue?: string) {
-        return Reflect.metadata(Format.key, JSON.stringify({replaceTarget, replaceValue}));
+    static annotation(...formats: FormatArg[]) {
+        return Reflect.metadata(Format.key, JSON.stringify(formats));
     }
     /**
      * フォーマット変換アノテーション実行
@@ -44,14 +51,16 @@ export class Format {
      * @param prop {string} プロパティ名称
      */
     static execute(target: any, prop: string, value: any) {
-        const result: string = value;
         const json: string = Reflect.getMetadata(Format.key, target, prop);
-        if (!json) return result;
-        logger.debug(`format execute. property-name: ${prop}, property-value: ${value}`);
+        if (!json) return value;
+        const result: string = value;
+        logger.debug(`format execute. property-name: ${prop}, property-value: ${JSON.stringify(result)}`);
         logger.debug(`format: ${json}`);
-        const format = JSON.parse(json);
-        const regexp = new RegExp(format.replaceTarget, 'g');
-        return result.replace(regexp, format.replaceValue || '');
+        const formats: FormatArg[] = JSON.parse(json);
+        return formats.reduce((a, f) => {
+            const regexp = new RegExp(f.regexp, 'g');
+            return result.replace(regexp, f.replace || '');
+        }, result);
     }
 }
 
@@ -78,7 +87,7 @@ export class ConditionRequired {
     static execute(target: any, prop: string, value: any) {
         const json: string = Reflect.getMetadata(ConditionRequired.key, target, prop);
         if (!json) return;
-        logger.debug(`condition required execute. property-name: ${prop}, property-value: ${value}`);
+        logger.debug(`condition required execute. property-name: ${prop}, property-value: ${JSON.stringify(value)}`);
         logger.debug(`cond: ${json}`);
         const cond = JSON.parse(json);
         if (cond.bool) {
@@ -101,10 +110,10 @@ export class AnnotationExecutor {
     annotate() {
         Object.entries(this).forEach(([k, v]) => {
             if (v instanceof AnnotationExecutor) {
-                return v.annotate();
+                v.annotate();
             }
             if (v instanceof Array) {
-                return v.forEach(x => (x instanceof AnnotationExecutor) && x.annotate());
+                v.forEach(x => (x instanceof AnnotationExecutor) && x.annotate());
             }
             this[k] = Format.execute(this, k, v);
             Required.execute(this, k, v);

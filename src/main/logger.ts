@@ -14,6 +14,12 @@ log4js.configure({
         default: {
             appenders: [
                 'console',
+            ],
+            level: process.env.NODE_LOG_LEVEL || 'debug'
+        },
+        app: {
+            appenders: [
+                'console',
                 'app'
             ],
             level: process.env.NODE_LOG_LEVEL || 'debug'
@@ -21,4 +27,5 @@ log4js.configure({
     }
 });
 
-export default log4js.getLogger();
+const category = process.env.NODE_LOG_CATEGORY;
+export default log4js.getLogger(category);
