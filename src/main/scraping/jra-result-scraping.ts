@@ -89,7 +89,7 @@ const getAllRaceNavigator = (target: string) => {
 };
 
 /**
- * Jraサイトのスクレイピング処理<br>
+ * Jraサイトのスクレイピング処理    
  * 過去レース結果からスクレイピング
  * @param year string
  * @param month string
@@ -103,10 +103,8 @@ const jraResultScraping = async (year: string, month: string, day?: string): Pro
     const raceListSelector = '#past_result > ul.past_result_line.mt20 > li > div';
 
     // スクレイピングオブジェクト
-    let puppetman: Puppetman = null;
+    const puppetman = await Puppetman.init({ headless: new Boolean(process.env.NODE_PUPPETEER_HEADLESS).valueOf() });
     try {
-        // ブラウザを起動
-        puppetman = await Puppetman.init({ headless: true });
         // レース結果一覧ページまで遷移
         await puppetman.navigate(navigator);
         // レース結果一覧のonclick属性を抜き出して返す
@@ -140,9 +138,7 @@ const jraResultScraping = async (year: string, month: string, day?: string): Pro
         }
         return results;
     } finally {
-        if (puppetman) {
-            await puppetman.close();    
-        }
+        await puppetman.close();    
     }
 };
 

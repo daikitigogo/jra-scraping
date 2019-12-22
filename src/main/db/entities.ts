@@ -2,7 +2,7 @@
 /**
  * レース一覧
  */
-export class RaceList {
+export class RaceData {
     /** 開催日 */
     dateOfRace: Date;
     /** 競馬場コード */

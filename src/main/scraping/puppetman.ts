@@ -54,7 +54,7 @@ export class Puppetman {
      * @param url string
      * @param options puppeteer.LaunchOptions
      */
-    static async init(options: puppeteer.LaunchOptions = { headless: false }): Promise<Puppetman> {
+    static async init(options: puppeteer.LaunchOptions): Promise<Puppetman> {
         // ブラウザを起動し、ページオブジェクトを取得する
         const browser = await puppeteer.launch(options);
         const page = (await browser.pages())[0];
