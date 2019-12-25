@@ -165,6 +165,9 @@ export class ResultDetailDto extends AnnotationExecutor {
     /** 着差 */
     @Format.annotation({ regexp: '／', replace: '/' })
     margin: string;
+    /** 推定上がり3F */
+    @Required.annotation()
+    fTime: string;
     /** 馬体重 */
     @ConditionRequired.annotation('place', '-1', false)
     @Format.annotation({ regexp: '\\(.+\\)' })

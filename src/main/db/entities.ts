@@ -28,9 +28,9 @@ export class RaceData {
     /** 特別レースID */
     specialityRaceId: number;
     /** レース詳細ID */
-    raceDetailId: number;
+    raceDetailId?: number;
     /** 払戻ID */
-    refundId: number;
+    refundId?: number;
 };
 
 /**
@@ -67,28 +67,22 @@ export class RaceDetail {
     frameNumber: number;
     /** 競走馬ID */
     horseId: number;
-    /** 馬主 */
-    owner: string;
     /** 騎手 */
     jockey: string;
     /** 調教師 */
     trainer: string;
     /** 斤量 */
     handicapWeight: number;
-    /** 単勝オッズ */
-    winOdds: number;
-    /** 複勝オッズ */
-    placeOdds: number;
+    /** 単勝人気 */
+    winPop: number;
     /** 馬体重 */
     horseWeight: number;
     /** 着順 */
     orderOfFinish: number;
     /** 走破時計 */
-    finishTime: Date;
+    finishTime: number;
     /** 着差 */
     margin: string;
-    /** コーナー通過順 */
-    orderOfCorner: number;
     /** 上り3F */
     timeOf3F: number;
 };
@@ -106,11 +100,13 @@ export class Refund {
     /** 当選番号1 */
     firstNumber: number;
     /** 当選番号2 */
-    secondNumber: number;
+    secondNumber?: number;
     /** 当選番号3 */
-    thirdNumber: number;
+    thirdNumber?: number;
     /** 払戻金額 */
     refundAmount: number;
+    /** 払戻人気 */
+    refundPop: number;
 };
 
 /**
@@ -121,12 +117,12 @@ export class HorseMaster {
     horseId: number = null;
     /** 馬名 */
     horseName: string = null;
-    /** 誕生日 */
-    birthday: Date = null;
+    /** 誕生年 */
+    birthYear: number = null;
     /** 父馬ID */
-    dadHorseId: number = null;
+    dadHorseId?: number = null;
     /** 母父ID */
-    secondDadHorseId: number = null;
+    secondDadHorseId?: number = null;
     /** 父父ID */
-    thirdDadHorseId: number = null;
+    thirdDadHorseId?: number = null;
 };

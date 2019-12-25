@@ -15,7 +15,7 @@ export enum ActionType {
 /**
  * ナビゲートアクション引数
  */
-export type NavigateArgs = {
+export interface NavigateArgs {
     /** ナビゲート対象セレクタ */
     readonly selector: string;
     /** ナビゲート設定値 */
@@ -29,7 +29,7 @@ export type NavigateArgs = {
 /**
  * スクレイピングメインページまでのナビゲートアクション
  */
-export class NavigateAction {
+export interface NavigateAction {
     /** ナビゲートアクション種別 */
     readonly type: ActionType;
     /** ナビゲートアクション引数 */

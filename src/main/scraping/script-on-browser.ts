@@ -105,6 +105,7 @@ export const scrapingAllRace = (elements: Element[]) => {
                         jockey: safetyRead(row.querySelector('.jockey')).textContent.trim().toString(),
                         time: safetyRead(row.querySelector('.time')).textContent.trim().toString(),
                         margin: safetyRead(row.querySelector('.margin')).textContent.trim().toString(),
+                        fTime: safetyRead(row.querySelector('.f_time')).textContent.trim().toString(),
                         horseWeight: safetyRead(row.querySelector('.h_weight')).textContent.trim().toString(),
                         trainer: safetyRead(row.querySelector('.trainer')).textContent.trim().toString(),
                         pop: safetyRead(row.querySelector('.pop')).textContent.trim().toString(),

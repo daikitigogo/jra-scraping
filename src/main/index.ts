@@ -1,6 +1,6 @@
 import * as dotenv from 'dotenv';
 dotenv.config();
-import jraResultScraping from './scraping/jra-result-scraping';
+import JraScrapintResult from './scraping/jra-result-scraping';
 import { Repository } from './db/repository';
 import * as entities from './db/entities';
 import { JraRepository } from './db/jra-repository';
@@ -26,7 +26,7 @@ if (date.toString() === 'Invalid Date') {
 const main = async (year: string, month: string, day: string) => {
 
     // JRAサイトから指定レース結果を取得
-    const targetDataList = await jraResultScraping(year, month, day);
+    const targetDataList = await new JraScrapintResult(year, month, day).execute();
 
     // DB更新
     const rep = new Repository();
@@ -41,14 +41,12 @@ const main = async (year: string, month: string, day: string) => {
         // スクレイピング結果をエンティティに変換
         return t.raceDataList.map(d => {
             // race_dataエンティティを取得
-            const raceData = new converters.RaceDataToEntity(d).execute(t.date, turfPlaceCode);
             // race_detailエンティティリストを取得
 
             // refundエンティティを取得
 
             // オブジェクトに詰める
             return {
-                raceData,
             };
         });
     })
