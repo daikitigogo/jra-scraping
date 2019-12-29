@@ -46,7 +46,6 @@ export class JraDbService {
         let detailId: number = null;
         for (const detail of value.raceDetails) {
             const horseMaster = await this.dbUtil.selectOne<entities.HorseMaster>(conn, sqls.selectHorseMasterSQL, detail.horseMaster);
-            logger.info(`horseMaster: ${JSON.stringify(horseMaster, undefined, 2)}`);
             if (!horseMaster.horseId) {
                 const writeRsp = await this.dbUtil.write(conn, sqls.insertHorseMasterSQL, detail.horseMaster);
                 detail.raceDetail.horseId = writeRsp.insertId;

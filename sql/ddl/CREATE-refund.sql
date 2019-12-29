@@ -6,5 +6,6 @@ CREATE TABLE refund (
   second_number INT ,
   third_number INT ,
   refund_amount INT NOT NULL,
+  refund_pop INT NOT NULL,
   PRIMARY KEY(refund_id, refund_kind, refund_seq)
 );
