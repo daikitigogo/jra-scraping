@@ -1,4 +1,4 @@
-import { Required, Format, ConditionRequired, AnnotationExecutor } from './annotations';
+import { Required, Format, ConditionRequired, AnnotationExecutor } from '#/scraping/annotations';
 
 /**
  * 対象レースデータ
@@ -10,7 +10,8 @@ export class TargetDataDto extends AnnotationExecutor {
      */
     constructor(obj: any) {
         super();
-        Object.entries(obj).forEach(([k, v]) => {
+        Object.entries(obj).forEach(([k, v]: [string, string]) => {
+            // @ts-ignore
             this[k] = v;
         });
     }
@@ -44,6 +45,7 @@ export class RaceDataDto extends AnnotationExecutor {
             } else if (k === 'odds') {
                 this[k] = new OddsInfoDto(v);
             } else {
+                // @ts-ignore
                 this[k] = v;
             }
         });
@@ -57,7 +59,11 @@ export class RaceDataDto extends AnnotationExecutor {
     @Required.annotation()
     raceName: string;
     /** GⅠ, GⅡ, GⅢ, リステッド */
-    @Format.annotation({ regexp: 'リステッド', replace: 'OL' })
+    @Format.annotation(
+        { regexp: 'リステッド', replace: 'OL' },
+        { regexp: 'GⅠ', replace: '1' },
+        { regexp: 'GⅡ', replace: 'G2' },
+        { regexp: 'GⅢ', replace: 'G3' })
     raceGrade: string;
     /** 天候 */
     @Required.annotation()
@@ -99,7 +105,6 @@ export class RaceDataDto extends AnnotationExecutor {
         { regexp: '.*オープン.*', replace: 'OP'})
     raceClass: string;
     /** 混合, 牝馬限定 */
-    @Required.annotation()
     @Format.annotation({ regexp: '.*牝.*', replace: '1' })
     raceRule: string;
     /** ハンデ, 別定, 定量 */
@@ -107,7 +112,8 @@ export class RaceDataDto extends AnnotationExecutor {
     @Format.annotation(
         { regexp: '.*ハンデ.*', replace: '1' },
         { regexp: '.*別定.*', replace: '2' },
-        { regexp: '.*定量.*', replace: '3' })
+        { regexp: '.*定量.*', replace: '3' },
+        { regexp: '.*馬齢.*', replace: '4'})
     raceWeight: string;
     /** 距離 */
     @Required.annotation()
@@ -131,7 +137,8 @@ export class ResultDetailDto extends AnnotationExecutor {
      */
     constructor(obj: any) {
         super();
-        Object.entries(obj).forEach(([k, v]) => {
+        Object.entries(obj).forEach(([k, v]: [string, string]) => {
+            // @ts-ignore
             this[k] = v;
         });
     }
@@ -158,6 +165,7 @@ export class ResultDetailDto extends AnnotationExecutor {
     weight: string;
     /** 騎手 */
     @Required.annotation()
+    @Format.annotation({ regexp: '▲|△|☆' })
     jockey: string;
     /** タイム */
     @ConditionRequired.annotation('place', '-1', false)
@@ -166,7 +174,7 @@ export class ResultDetailDto extends AnnotationExecutor {
     @Format.annotation({ regexp: '／', replace: '/' })
     margin: string;
     /** 推定上がり3F */
-    @Required.annotation()
+    @ConditionRequired.annotation('place', '-1', false)
     fTime: string;
     /** 馬体重 */
     @ConditionRequired.annotation('place', '-1', false)
@@ -195,6 +203,7 @@ export class OddsInfoDto extends AnnotationExecutor {
             if (k == 'wakuren' && v.length == 1 && v.every(x => !x.num && !x.yen && !x.pop)) {
                 this[k] = [];
             } else {
+                // @ts-ignore
                 this[k] = v.map(x => new OddsDetailDto(x));
             }
         });
@@ -228,7 +237,8 @@ export class OddsDetailDto extends AnnotationExecutor {
      */
     constructor(obj: any) {
         super();
-        Object.entries(obj).forEach(([k, v]) => {
+        Object.entries(obj).forEach(([k, v]: [string, string]) => {
+            // @ts-ignore
             this[k] = v;
         });
     }
@@ -237,8 +247,10 @@ export class OddsDetailDto extends AnnotationExecutor {
     num: string;
     /** 払い戻し */
     @Required.annotation()
+    @Format.annotation({ regexp: '[^0-9]' })
     yen: string;
     /** 人気 */
     @Required.annotation()
+    @Format.annotation({ regexp: '[^0-9]' })
     pop: string;
 }

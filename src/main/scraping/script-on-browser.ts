@@ -52,8 +52,9 @@ export const scrapingAllRace = (elements: Element[]) => {
     const safetyRead = (node: Element) => {
         return node || {
             textContent: '',
-            getAttribute: () => {
-                return {alt: '', onclick: ''}
+            getAttribute: a => {
+                const attribute: any = {alt: '', onclick: ''};
+                return attribute[a];
             },
             firstChild: {
                 textContent: ''
@@ -84,7 +85,7 @@ export const scrapingAllRace = (elements: Element[]) => {
             raceNumber: safetyRead(e.querySelector('.race_number > img')).getAttribute('alt').toString(),
             raceName: safetyRead(e.querySelector('.race_name')).textContent.trim().toString(),
             raceGrade: safetyRead(e.querySelector('.race_name > span > img')).getAttribute('alt').toString(),
-            weather: safetyRead(e.querySelector('.weather .txt')).textContent.trim().toString(),
+            weather: safetyRead(e.querySelector('.weather > .inner > .txt')).textContent.trim().toString(),
             turfCondition: safetyRead(e.querySelector('.turf .txt')).textContent.trim().toString(),
             durtCondition: safetyRead(e.querySelector('.durt .txt')).textContent.trim().toString(),
             raceCategory: safetyRead(e.querySelector('.cell.category')).textContent.trim().toString(),

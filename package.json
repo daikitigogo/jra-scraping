@@ -2,10 +2,10 @@
   "name": "node",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "src/main/index.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "watch": "tsc -w"
+    "start": "ts-node --files -r tsconfig-paths/register",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
@@ -14,7 +14,9 @@
     "@types/chai": "^4.2.7",
     "@types/node": "^12.12.14",
     "chai": "^4.2.0",
+    "csv-parse": "^4.8.3",
     "ts-node": "^8.5.4",
+    "tsconfig-paths": "^3.9.0",
     "typescript": "^3.7.2"
   },
   "private": true,

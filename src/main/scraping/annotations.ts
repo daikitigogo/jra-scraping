@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import logger from '../logger';
+import { logger } from '#/logger';
 
 /**
  * 必須項目アノテーション
@@ -59,7 +59,7 @@ export class Format {
         const formats: FormatArg[] = JSON.parse(json);
         return formats.reduce((a, f) => {
             const regexp = new RegExp(f.regexp, 'g');
-            return result.replace(regexp, f.replace || '');
+            return a.replace(regexp, f.replace || '');
         }, result);
     }
 }
@@ -115,6 +115,7 @@ export class AnnotationExecutor {
             if (v instanceof Array) {
                 v.forEach(x => (x instanceof AnnotationExecutor) && x.annotate());
             }
+            // @ts-ignore
             this[k] = Format.execute(this, k, v);
             Required.execute(this, k, v);
             ConditionRequired.execute(this, k, v);

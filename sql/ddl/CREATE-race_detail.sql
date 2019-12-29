@@ -5,7 +5,7 @@ CREATE TABLE race_detail (
   horse_id INT NOT NULL,
   jockey VARCHAR(30) NOT NULL,
   trainer VARCHAR(30) NOT NULL,
-  handicap_weight INT NOT NULL,
+  handicap_weight DOUBLE NOT NULL,
   win_pop INT ,
   horse_weight INT ,
   order_of_finish INT ,

@@ -28,4 +28,4 @@ log4js.configure({
 });
 
 const category = process.env.NODE_LOG_CATEGORY;
-export default log4js.getLogger(category);
+export const logger = log4js.getLogger(category);

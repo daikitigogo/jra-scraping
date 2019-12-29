@@ -1,10 +1,9 @@
-
 /**
  * レース一覧
  */
 export class RaceData {
     /** 開催日 */
-    dateOfRace: Date;
+    dateOfRace: string;
     /** 競馬場コード */
     turfPlaceCode: string;
     /** 第Nレース */
@@ -28,9 +27,9 @@ export class RaceData {
     /** 特別レースID */
     specialityRaceId: number;
     /** レース詳細ID */
-    raceDetailId?: number;
+    raceDetailId: number;
     /** 払戻ID */
-    refundId?: number;
+    refundId: number;
 };
 
 /**
@@ -53,6 +52,8 @@ export class SpecialityRace {
     specialityRaceId: number;
     /** 特別レース名称 */
     specialityRaceName: string;
+    /** 旧レースID */
+    oldRaceId?: number;
 };
 
 /**
@@ -100,9 +101,9 @@ export class Refund {
     /** 当選番号1 */
     firstNumber: number;
     /** 当選番号2 */
-    secondNumber?: number;
+    secondNumber: number;
     /** 当選番号3 */
-    thirdNumber?: number;
+    thirdNumber: number;
     /** 払戻金額 */
     refundAmount: number;
     /** 払戻人気 */
@@ -114,15 +115,17 @@ export class Refund {
  */
 export class HorseMaster {
     /** 馬ID */
-    horseId: number = null;
+    horseId: number;
     /** 馬名 */
-    horseName: string = null;
+    horseName: string;
     /** 誕生年 */
-    birthYear: number = null;
+    birthYear: number;
+    /** 性別 */
+    sex: string;
     /** 父馬ID */
-    dadHorseId?: number = null;
+    dadHorseId: number;
     /** 母父ID */
-    secondDadHorseId?: number = null;
+    secondDadHorseId: number;
     /** 父父ID */
-    thirdDadHorseId?: number = null;
+    thirdDadHorseId: number;
 };
