@@ -1,5 +1,5 @@
 import { DecoratorExecutor} from '#/share/decorators';
-import { OddsDetailDto } from '#/jobs/scraping/dtos/OddsDetailDto';
+import { OddsDetailDto } from '#/share/dtos/OddsDetailDto';
 
 /**
  * スクレイピング結果オッズ情報

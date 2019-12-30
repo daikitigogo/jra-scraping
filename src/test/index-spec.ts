@@ -90,6 +90,7 @@ async function assert<T>(tableName: string, sql: string, parimary: Set<string>) 
             columns: true
         }) as T[];
         const actualData = await conn.query({ namedPlaceholders: true, sql });
+        chai.assert.equal(actualData.length, expected.length);
         assertObj(grouping(actualData, parimary), grouping(expected, parimary));
     } finally {
         conn.end();

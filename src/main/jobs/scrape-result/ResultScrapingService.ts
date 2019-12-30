@@ -1,6 +1,6 @@
 import { ActionType, Puppetman, NavigateAction } from '#/share/utils/Puppetman';
-import * as dtos from '#/jobs/scraping/dtos';
-import { scrapingAllRace, takeRaceList } from '#/jobs/scraping/result/ScrapingOnBrowser';
+import * as dtos from '#/share/dtos';
+import { scrapingAllRace, takeRaceList } from '#/jobs/scrape-result/ScrapingOnBrowser';
 
 /**
  * Jraサイトのスクレイピング処理    
@@ -16,6 +16,13 @@ export class ResultScrapingService {
      */
     constructor(private puppetman: Promise<Puppetman>) { }
 
+    /**
+     * 指定年月の開催レースを取得する    
+     * 日が指定されている場合は更にフィルターする
+     * @param year {string}
+     * @param month {string}
+     * @param day {string}
+     */
     async getTargetRaces(year: string, month: string, day: string): Promise<dtos.TargetDataDto[]> {
         
         // プルダウン選択＆検索実行までのナビを取得
@@ -36,7 +43,10 @@ export class ResultScrapingService {
     }
 
     /**
-     * スクレイピング処理実行
+     * 指定されたonclickリンクをクリック、１開催の全レース情報を取得する
+     * @param year {string}
+     * @param month {string}
+     * @param target {string}
      */
     async execute(year: string, month: string, target: dtos.TargetDataDto): Promise<dtos.TargetDataDto> {
 
@@ -50,7 +60,7 @@ export class ResultScrapingService {
         await puppetman.navigate(this.getAllRaceNavigator(target.onclick));
         const raceDataList: dtos.RaceDataDto[] = await puppetman.page.$$eval('[id^="race_result_"]', scrapingAllRace)
             .then((jsArr: any[]) => jsArr.map(jsObj => new dtos.RaceDataDto(jsObj).decorate()));
-        // 1レース分をスクレイピングして配列に詰めていく
+        // 1レース分をスクレイピングして返却する
         return new dtos.TargetDataDto({
             date: `${year}/${target.date}`,
             turfPlaceName: target.turfPlaceName,

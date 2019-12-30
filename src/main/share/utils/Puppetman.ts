@@ -101,7 +101,11 @@ export class Puppetman {
      */
     private async click(args: NavigateArgs): Promise<void> {
         // 対象セレクタをクリック
-        await this.page.click(args.selector);
+        await this.page.click(args.selector)
+            .catch(async() => {
+                await this.page.waitFor(args.waitTime);
+                await this.page.click(args.selector)
+            });
         // 任意引数に従って待機処理を入れる
         if (args.waitSelector) {
             await this.page.waitForSelector(args.waitSelector);
@@ -117,7 +121,11 @@ export class Puppetman {
      */
     private async select(args: NavigateArgs): Promise<void> {
         // 対象セレクタを選択
-        await this.page.select(args.selector, args.value);
+        await this.page.select(args.selector, args.value)
+            .catch(async() => {
+                await this.page.waitFor(args.waitTime);
+                await this.page.click(args.selector)
+            });
         // 任意引数に従って待機処理を入れる
         if (args.waitTime) {
             await this.page.waitFor(args.waitTime);

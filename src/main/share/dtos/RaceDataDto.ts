@@ -1,5 +1,5 @@
 import { Required, Format, CodeMapping, DecoratorExecutor } from '#/share/decorators';
-import { RaceDetailDto, OddsInfoDto } from '#/jobs/scraping/dtos';
+import { RaceDetailDto, OddsInfoDto } from '#/share/dtos';
 
 /**
  * スクレイピング結果ベース
@@ -33,9 +33,14 @@ export class RaceDataDto extends DecoratorExecutor {
     /** GⅠ, GⅡ, GⅢ, リステッド */
     @Format.decorator(
         { regexp: '.*リステッド.*', replace: 'OL' },
-        { regexp: '.*GⅠ.*', replace: '1' },
+        { regexp: '.*重賞.*', replace: 'G0' },
+        { regexp: '.*GⅠ.*', replace: 'G1' },
         { regexp: '.*GⅡ.*', replace: 'G2' },
-        { regexp: '.*GⅢ.*', replace: 'G3' })
+        { regexp: '.*GⅢ.*', replace: 'G3' },
+        { regexp: '.*JpnⅠ.*', replace: 'J1' },
+        { regexp: '.*JpnⅡ.*', replace: 'J2' },
+        { regexp: '.*JpnⅢ.*', replace: 'J3' },
+    )
     raceGrade: string;
     /** 天候 */
     @Required.decorator()
@@ -45,6 +50,8 @@ export class RaceDataDto extends DecoratorExecutor {
             { codeId: '2', codeValue: '曇' },
             { codeId: '3', codeValue: '雨' },
             { codeId: '4', codeValue: '小雨' },
+            { codeId: '5', codeValue: '雪' },
+            { codeId: '6', codeValue: '小雪' },
         ]
     })
     weather: string;

@@ -1,11 +1,16 @@
-import * as dtos from '#/jobs/scraping/dtos';
+import * as dtos from '#/share/dtos';
 import * as entities from '#/share/entities';
-import { EntitySetDto } from '../../../share/dtos';
 
+/**
+ * スクレイピング結果のDTOをエンティティセットDTOに変換する
+ */
 export class Converter {
 
+    /** RaceDataToEntity */
     private raceDataToEntity = new RaceDataToEntity();
+    /** RaceDetailToEntity */
     private raceDetailToEntity = new RaceDetailToEntity();
+    /** OddsInfoToEntity */
     private oddsInfoToEntity = new OddsInfoToEntity();
 
     /**
@@ -14,11 +19,17 @@ export class Converter {
      */
     constructor(private turfPlaceList: entities.TurfPlaceMaster[]) { }
 
-    convert(targetData: dtos.TargetDataDto): EntitySetDto[] {
+    /**
+     * convert
+     * @param targetData {dtos.TargetDataDto}
+     * @returns {dtos.EntitySetDto[]}
+     */
+    convert(targetData: dtos.TargetDataDto): dtos.EntitySetDto[] {
+
         // 競馬場コードをマスタから取り出し
         const turfPlaceCode = this.turfPlaceList.find(x => targetData.turfPlaceName.includes(x.turfPlaceName)).turfPlaceCode;
         return targetData.raceDataList.map(raceData => {
-            const entitySet: EntitySetDto = {
+            const entitySet: dtos.EntitySetDto = {
                 raceData: this.raceDataToEntity.convert(targetData.date, turfPlaceCode, raceData),
                 raceDetails: raceData.raceDetails.map(r => this.raceDetailToEntity.convert(targetData.date, r)),
                 refunds: this.oddsInfoToEntity.convert(raceData.odds),

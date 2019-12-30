@@ -1,8 +1,8 @@
 import { Puppetman } from '#/share/utils/Puppetman';
-import { ResultScrapingService } from '#/jobs/scraping/result/ResultScrapingService';
+import { ResultScrapingService } from '#/jobs/scrape-result/ResultScrapingService';
 import { ReflectDbService } from '#/share/services/ReflectDbService';
 import { DbUtil } from '#/share/utils/DbUtil';
-import { ResultScrapingJob } from "#/jobs/scraping/result/ResultScrapingJob";
+import { ResultScrapingJob } from "#/jobs/scrape-result/ResultScrapingJob";
 import * as mariadb from 'mariadb';
 
 export const puppetman = Puppetman.init({ headless: Boolean(process.env.NODE_PUPPETEER_HEADLESS) || true });

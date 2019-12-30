@@ -1,5 +1,5 @@
 import { Required, DecoratorExecutor} from '#/share/decorators';
-import { RaceDataDto } from '#/jobs/scraping/dtos';
+import { RaceDataDto } from '#/share/dtos';
 
 /**
  * 対象レースデータ
