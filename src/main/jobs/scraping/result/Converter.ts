@@ -1,20 +1,6 @@
-import * as dtos from '#/scraping/dtos';
-import * as entities from '#/db/entities';
-
-/** 変換後のエンティティセット */
-export interface EntitySet {
-    /** レースデータ */
-    raceData: entities.RaceData;
-    /** レース詳細リスト */
-    raceDetails: {
-        raceDetail: entities.RaceDetail,
-        horseMaster: entities.HorseMaster
-    }[];
-    /** 払い戻しデータ */
-    refunds: entities.Refund[];
-    /** 特別レース */
-    specialityRace?: entities.SpecialityRace;
-}
+import * as dtos from '#/jobs/scraping/dtos';
+import * as entities from '#/share/entities';
+import { EntitySetDto } from '../../../share/dtos';
 
 export class Converter {
 
@@ -28,13 +14,13 @@ export class Converter {
      */
     constructor(private turfPlaceList: entities.TurfPlaceMaster[]) { }
 
-    convert(targetData: dtos.TargetDataDto): EntitySet[] {
+    convert(targetData: dtos.TargetDataDto): EntitySetDto[] {
         // 競馬場コードをマスタから取り出し
         const turfPlaceCode = this.turfPlaceList.find(x => targetData.turfPlaceName.includes(x.turfPlaceName)).turfPlaceCode;
         return targetData.raceDataList.map(raceData => {
-            const entitySet: EntitySet = {
+            const entitySet: EntitySetDto = {
                 raceData: this.raceDataToEntity.convert(targetData.date, turfPlaceCode, raceData),
-                raceDetails: raceData.raceResult.map(r => this.raceDetailToEntity.convert(targetData.date, r)),
+                raceDetails: raceData.raceDetails.map(r => this.raceDetailToEntity.convert(targetData.date, r)),
                 refunds: this.oddsInfoToEntity.convert(raceData.odds),
             };
             if (entitySet.raceData.specialityRaceId != null) {
@@ -127,7 +113,7 @@ class RaceDetailToEntity {
      * 変換を実行する
      * @param dto {dtos.ResultDetailDto}
      */
-    convert(raceDate: string, dto: dtos.ResultDetailDto): {raceDetail: entities.RaceDetail, horseMaster: entities.HorseMaster} {
+    convert(raceDate: string, dto: dtos.RaceDetailDto): {raceDetail: entities.RaceDetail, horseMaster: entities.HorseMaster} {
         const raceDetail: entities.RaceDetail = {
             raceDetailId: null,
             horseNumber: +dto.num,

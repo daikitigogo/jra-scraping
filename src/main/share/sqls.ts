@@ -158,3 +158,7 @@ export const insertSpecialityRaceSQL = `
         NULL
     );
 `;
+
+export const selectReflectedRaceDataSQL = `
+    SELECT * FROM race_data WHERE date_of_race = :dateOfRace AND turf_place_code = :turfPlaceCode AND refund_id IS NOT NULL;
+`;

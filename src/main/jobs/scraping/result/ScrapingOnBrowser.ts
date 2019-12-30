@@ -94,7 +94,7 @@ export const scrapingAllRace = (elements: Element[]) => {
             raceWeight: safetyRead(e.querySelector('.cell.weight')).textContent.trim().toString(),
             raceCourse: safetyRead(e.querySelector('.cell.course')).textContent.trim().toString(),
             // レース結果の抜き出し
-            raceResult: Array.from(e.querySelector('table').querySelectorAll('tbody > tr'))
+            raceDetails: Array.from(e.querySelector('table').querySelectorAll('tbody > tr'))
                 .map(row => {
                     return {
                         place: safetyRead(row.querySelector('.place')).textContent.trim().toString(),

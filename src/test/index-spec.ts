@@ -7,7 +7,7 @@ import * as modules from '#/modules';
 import * as chai from "chai";
 import fs = require('fs');
 import parse = require('csv-parse/lib/sync');
-import * as entities from '#/db/entities';
+import * as entities from '#/share/entities';
 import { logger } from '#/logger';
 
 const sql1 = `
@@ -35,7 +35,7 @@ const sql1 = `
     try {
         await after();
         await before();
-        await modules.mainController.run('2019', '02', '17');
+        await modules.resultScrapingJob.run('2019', '02', '17');
         await Promise.all([
             assert<entities.RaceData>('race_data', sql1, new Set(['date_of_race', 'turf_place_code', 'race_number'])),
             assert<entities.RaceDetail>('race_detail', 'SELECT * FROM race_detail;', new Set(['race_detail_id', 'horse_number'])),

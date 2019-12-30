@@ -1,17 +1,27 @@
-import { DbUtil } from '#/db/db-util';
-import * as sqls from '#/db/sqls';
+import { DbUtil } from '#/share/utils/DbUtil';
+import * as sqls from '#/share/sqls';
 import * as mariadb from 'mariadb';
-import { EntitySet } from '#/db/converter';
-import * as entities from '#/db/entities';
+import { EntitySetDto } from '#/share/dtos/EntitySetDto';
+import * as entities from '#/share/entities';
 import { logger } from '#/logger';
 
-export class JraDbService {
+export class ReflectDbService {
 
     /**
      * コンストラクタ
      * @param rep Repository
      */
     constructor(private pool: mariadb.Pool, private readonly dbUtil: DbUtil) { }
+
+    async selectReflectedRaceData(dateOfRace: string, turfPlaceCode: string) {
+        const conn = await this.pool.getConnection();
+        try {
+            const raceList = await this.dbUtil.select<entities.RaceData>(conn, sqls.selectReflectedRaceDataSQL, { dateOfRace, turfPlaceCode });
+            return raceList.length;
+        } finally {
+            conn.end();
+        }
+    }
 
     async selectAllTurfPlaceMaster(): Promise<entities.TurfPlaceMaster[]> {
         const conn = await this.pool.getConnection();
@@ -22,7 +32,7 @@ export class JraDbService {
         }
     }
 
-    async registAll(values: EntitySet[]) {
+    async registAll(values: EntitySetDto[]) {
 
         const conn = await this.pool.getConnection();
         await conn.beginTransaction();
@@ -41,7 +51,7 @@ export class JraDbService {
         }
     }
 
-    private async regist(conn: mariadb.Connection, value: EntitySet) {
+    private async regist(conn: mariadb.Connection, value: EntitySetDto) {
 
         let detailId: number = null;
         for (const detail of value.raceDetails) {

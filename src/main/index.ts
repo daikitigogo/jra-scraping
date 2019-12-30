@@ -1,16 +1,16 @@
 import * as dotenv from 'dotenv';
 dotenv.config();
 
-import { mainController, close } from '#/modules';
+import { resultScrapingJob, close } from '#/modules';
 
 function readArgv(argv: string[]): { year: string, month: string, day: string } {
-    if (!(4 <= argv.length && argv.length <= 5)) {
+    if (argv.length < 3) {
         throw new Error('Invalid arguments!');
     }
-    const year = process.argv[2];
-    const month = process.argv[3];
-    const day = process.argv.length == 5 ? process.argv[4] : null;
-    const date = new Date(`${year}-${month}-${day || '01'}`);
+    const year = argv[2];
+    const month = argv.length > 3 ? process.argv[3] : null;
+    const day = argv.length > 4 ? argv[4] : null;
+    const date = new Date(`${year}-${month || '01'}-${day || '01'}`);
     if (date.toString() === 'Invalid Date') {
         throw new Error('Invalid Date!');
     }
@@ -21,10 +21,18 @@ function readArgv(argv: string[]): { year: string, month: string, day: string } 
     };
 }
 
+const months = ['06', '07', '08', '09', '10', '11', '12'];
+
 (async () => {
     try {
         const args = readArgv(process.argv);
-        await mainController.run(args.year, args.month, args.day);
+        if (args.month) {
+            await resultScrapingJob.run(args.year, args.month, args.day);
+        } else {
+            for (const month of months) {
+                await resultScrapingJob.run(args.year, month, null);
+            }
+        }
     } catch (e) {
         console.error(e);
     } finally {

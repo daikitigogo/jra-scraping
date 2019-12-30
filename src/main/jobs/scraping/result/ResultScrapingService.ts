@@ -1,12 +1,12 @@
-import { ActionType, Puppetman, NavigateAction } from '#/scraping/puppetman';
-import * as dtos from '#/scraping/dtos';
-import { scrapingAllRace, takeRaceList } from '#/scraping/script-on-browser';
+import { ActionType, Puppetman, NavigateAction } from '#/share/utils/Puppetman';
+import * as dtos from '#/jobs/scraping/dtos';
+import { scrapingAllRace, takeRaceList } from '#/jobs/scraping/result/ScrapingOnBrowser';
 
 /**
  * Jraサイトのスクレイピング処理    
  * 過去レース結果からスクレイピング
  */
-export class JraResultScraping {
+export class ResultScrapingService {
 
     /** 共通待ち時間 */
     private readonly waitTime = 1000;
@@ -16,11 +16,8 @@ export class JraResultScraping {
      */
     constructor(private puppetman: Promise<Puppetman>) { }
 
-    /**
-     * スクレイピング処理実行
-     */
-    async execute(year: string, month: string, day?: string): Promise<dtos.TargetDataDto[]> {
-
+    async getTargetRaces(year: string, month: string, day: string): Promise<dtos.TargetDataDto[]> {
+        
         // プルダウン選択＆検索実行までのナビを取得
         const navigator = this.getNavigator(year, month);
         // レース結果リストセレクタ
@@ -33,33 +30,32 @@ export class JraResultScraping {
         await puppetman.navigate(navigator);
         // レース結果一覧のonclick属性を抜き出して返す
         const raceList: dtos.TargetDataDto[] = await puppetman.page.$$eval(raceListSelector, takeRaceList)
-            .then((jsArr: any[]) => jsArr.map(jsObj => new dtos.TargetDataDto(jsObj).annotate()));
+            .then((jsArr: any[]) => jsArr.map(jsObj => new dtos.TargetDataDto(jsObj).decorate()));
         // 日が指定されている場合は、対象レースに絞る
-        const targetRace = day ? raceList.filter(r => r.date == `${+month}/${+day}`) : [...raceList];
-        // 結果を配列に詰めていく
-        const results: dtos.TargetDataDto[] = [];
-        // 対象がなければ処理を終了する
-        if (targetRace.length == 0) {
-            return results;
-        }
-        // スクレイピング処理実施
-        for (const target of targetRace) {
-            // レース結果一覧ページまで再度遷移
-            await puppetman.navigate(navigator);
-            // onclick属性クリック、全レース結果表示リンククリック
-            await puppetman.navigate(this.getAllRaceNavigator(target.onclick));
-            const raceDataList: dtos.RaceDataDto[] = await puppetman.page.$$eval('[id^="race_result_"]', scrapingAllRace)
-                .then((jsArr: any[]) => jsArr.map(jsObj => new dtos.RaceDataDto(jsObj).annotate()));
-            // 1レース分をスクレイピングして配列に詰めていく
-            results.push(
-                new dtos.TargetDataDto({
-                    date: `${year}/${target.date}`,
-                    turfPlaceName: target.turfPlaceName,
-                    raceDataList, 
-                })
-            );
-        }
-        return results;
+        return day ? raceList.filter(r => r.date == `${+month}/${+day}`) : [...raceList];
+    }
+
+    /**
+     * スクレイピング処理実行
+     */
+    async execute(year: string, month: string, target: dtos.TargetDataDto): Promise<dtos.TargetDataDto> {
+
+        // プルダウン選択＆検索実行までのナビを取得
+        const navigator = this.getNavigator(year, month);
+        // スクレイピングオブジェクト
+        const puppetman = await this.puppetman;
+        // レース結果一覧ページまで再度遷移
+        await puppetman.navigate(navigator);
+        // onclick属性クリック、全レース結果表示リンククリック
+        await puppetman.navigate(this.getAllRaceNavigator(target.onclick));
+        const raceDataList: dtos.RaceDataDto[] = await puppetman.page.$$eval('[id^="race_result_"]', scrapingAllRace)
+            .then((jsArr: any[]) => jsArr.map(jsObj => new dtos.RaceDataDto(jsObj).decorate()));
+        // 1レース分をスクレイピングして配列に詰めていく
+        return new dtos.TargetDataDto({
+            date: `${year}/${target.date}`,
+            turfPlaceName: target.turfPlaceName,
+            raceDataList, 
+        })
     }
 
     /**
