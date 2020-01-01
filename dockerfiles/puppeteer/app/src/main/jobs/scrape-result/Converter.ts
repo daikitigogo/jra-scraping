@@ -145,9 +145,8 @@ class RaceDetailToEntity {
             horseName: dto.horse,
             birthYear: new Date(raceDate).getFullYear() - +dto.age.replace(/[^0-9]/g, ''),
             sex: dto.age.includes('牡') ? 'M' : dto.age.includes('牝') ? 'F' : 'S',
-            dadHorseId: null,
-            secondDadHorseId: null,
-            thirdDadHorseId: null,
+            dadHorseName: null,
+            secondDadHorseName: null,
         };
         return {raceDetail, horseMaster};
     }
