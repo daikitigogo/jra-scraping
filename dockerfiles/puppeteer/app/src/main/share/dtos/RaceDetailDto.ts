@@ -47,7 +47,8 @@ export class RaceDetailDto extends DecoratorExecutor {
     @Format.decorator({ regexp: '／', replace: '/' })
     margin: string;
     /** 推定上がり3F */
-    @ConditionRequired.decorator({ targetProp: 'place', condFunc: (value) => value != '-1' })
+    // あまりの大差負けの場合もNULLがあるらしい...
+    // @ConditionRequired.decorator({ targetProp: 'place', condFunc: (value) => value != '-1' })
     fTime: string;
     /** 馬体重 */
     @ConditionRequired.decorator({ targetProp: 'place', condFunc: (value) => value != '-1' })
