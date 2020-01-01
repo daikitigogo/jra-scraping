@@ -10,10 +10,8 @@ export class HorseMaster {
     birthYear: number;
     /** 性別 */
     sex: string;
-    /** 父馬ID */
-    dadHorseId: number;
-    /** 母父ID */
-    secondDadHorseId: number;
-    /** 父父ID */
-    thirdDadHorseId: number;
+    /** 父馬名 */
+    dadHorseName: string;
+    /** 母父名 */
+    secondDadHorseName: string;
 };

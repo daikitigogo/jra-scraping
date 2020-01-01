@@ -101,9 +101,8 @@ export const selectHorseMasterSQL = `
         horse_name,
         birth_year,
         sex,
-        dad_horse_id,
-        second_dad_horse_id,
-        third_dad_horse_id
+        dad_horse_name,
+        second_dad_horse_name
     FROM
         horse_master
     WHERE
@@ -121,17 +120,15 @@ export const insertHorseMasterSQL = `
         horse_name,
         birth_year,
         sex,
-        dad_horse_id,
-        second_dad_horse_id,
-        third_dad_horse_id
+        dad_horse_name,
+        second_dad_horse_name
     ) VALUES (
         :horseId,
         :horseName,
         :birthYear,
         :sex,
-        :dadHorseId,
-        :secondDadHorseId,
-        :thirdDadHorseId
+        :dadHorseName,
+        :secondDadHorseName
     );
 `;
 
