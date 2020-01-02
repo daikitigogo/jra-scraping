@@ -1,33 +1,41 @@
+import { BaseEntity } from "./BaseEntity";
+
 /**
  * race_dataエンティティ
  */
-export class RaceData {
+export class RaceData implements BaseEntity {
+
+    /** テーブル名 */
+    readonly tableName = 'race_data';
+    /** 主キーセット */
+    readonly primaryKeySet = new Set(['date_of_race', 'turf_place_code', 'race_number']);
+
     /** 開催日 */
-    dateOfRace: string;
+    dateOfRace: string = null;
     /** 競馬場コード */
-    turfPlaceCode: string;
+    turfPlaceCode: string = null;
     /** 第Nレース */
-    raceNumber: number;
+    raceNumber: number = null;
     /** レース種別 */
-    raceType: string;
+    raceType: string = null;
     /** 天候 */
-    weather: string;
+    weather: string = null;
     /** 馬場状態 */
-    groundCondition: string;
+    groundCondition: string = null;
     /** 距離 */
-    raceDistance: number;
+    raceDistance: number = null;
     /** 対象馬齢 */
-    horseAge: string;
+    horseAge: string = null;
     /** レースグレード */
-    raceGrade: string;
+    raceGrade: string = null;
     /** ハンデ */
-    handicap: string;
+    handicap: string = null;
     /** 牝馬限定 */
-    mareOnly: string;
+    mareOnly: string = null;
     /** 特別レースID */
-    specialityRaceId: number;
+    specialityRaceId: number = null;
     /** レース詳細ID */
-    raceDetailId: number;
+    raceDetailId: number = null;
     /** 払戻ID */
-    refundId: number;
+    refundId: number = null;
 };

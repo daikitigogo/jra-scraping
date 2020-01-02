@@ -1,6 +1,6 @@
 import { ResultScrapingService } from "#/jobs/scrape-result/ResultScrapingService";
-import { ReflectDbService } from "#/share/services/ReflectDbService";
-import { Converter } from "#/jobs/scrape-result/Converter";
+import { ResultDatabaseService } from "#/jobs/scrape-result/ResultDatabaseService";
+import { DtoToEntity } from "#/jobs/scrape-result/DtoToEntity";
 import { logger } from "#/logger";
 
 /**
@@ -10,40 +10,60 @@ export class ResultScrapingJob {
 
     /**
      * コンストラクタ
-     * @param resultScrapingService {ResultScrapingService}
-     * @param reflectDbService {ReflectDbService}
+     * @param resultScrapingService ResultScrapingService
+     * @param reflectDbService ReflectDbService
      */
     constructor(
-        private resultScrapingService: ResultScrapingService,
-        private reflectDbService: ReflectDbService) { }
+        private scrapingService: ResultScrapingService,
+        private databaseService: ResultDatabaseService) { }
 
     /**
      * スクレイピングを実行、結果をDBに保存する    
      * 日付、競馬場単位でトランザクション制御。既に処理済みの場合はスキップする
-     * @param year {string}
-     * @param month {string}
-     * @param day? {string}
+     * @param year string
+     * @param month string
+     * @param day? string
      */
     async run(year: string, month: string, day?: string) {
 
-        const turfPlaceList = await this.reflectDbService.selectAllTurfPlaceMaster();
-        const converter = new Converter(turfPlaceList);
-        const targets = await this.resultScrapingService.getTargetRaces(year, month, day);
-        if (targets.length == 0) {
+        logger.info(`ResultScrapingJob start! ${year}/${month}/${day}`);
+
+        // 指定年月で検索するまでのナビゲーターを取得
+        const baseNavigator = this.scrapingService.getNavigator(year, month);
+        // 指定年月内での全開催リンクを抜き出し、日が指定されている場合は、更に日付で絞り込む
+        const targetRaces = await this.scrapingService.getTargetRaces(baseNavigator)
+            .then(targets => targets.filter(t => !day || t.date == `${+month}/${+day}`));
+        if (targetRaces.length == 0) {
             logger.info('Target nothing!');
+            return;
         }
-        for (const target of targets) {
-            const turfPlaceCode = turfPlaceList.find(x => target.turfPlaceName.includes(x.turfPlaceName)).turfPlaceCode;
-            const date = `${year}/${target.date}`;
-            const count = await this.reflectDbService.selectReflectedRaceData(date, turfPlaceCode);
-            if (count > 0) {
-                logger.info(`Skip raceData! ${date}, ${turfPlaceCode}`);
+        // 後の競馬場判定のため、競馬場マスタを全取得しておく
+        const turfPlaceList = await this.databaseService.getTurfPlaceMaster();
+        // Dto→Entity変換クラスを用意
+        const dtoToEntity = new DtoToEntity();
+
+        for (const target of targetRaces) {
+
+            // 開催日付、競馬場コードを特定する
+            const dateOfRace = `${year}/${target.date}}`;
+            const turfPlaceCode = turfPlaceList.find(t => target.turfPlaceName.includes(t.turfPlaceName)).turfPlaceCode;
+
+            // 反映済みレースはスキップする
+            const reflected = await this.databaseService.isReflected(dateOfRace, turfPlaceCode);
+            if (reflected) {
+                logger.info(`Skip raceData! ${dateOfRace}, ${turfPlaceCode}`);
                 continue;
             }
-            logger.info(`Scraping start! target: ${JSON.stringify(target)}`);
-            const targetData = await this.resultScrapingService.execute(year, month, target);
-            const entitySetList = converter.convert(targetData);
-            await this.reflectDbService.registAll(entitySetList);
+
+            // onclickリンククリックまでのナビゲーターを取得
+            const allRaceNavigator = this.scrapingService.getAllRaceNavigator(target.onclick);
+            // １開催の全レースを取得する
+            const raceList = await this.scrapingService.getRaceList([...baseNavigator, ...allRaceNavigator]);
+            // エンティティリストに変換する
+            const entityList = dtoToEntity.convert(dateOfRace, turfPlaceCode, raceList);
+
+            // DB反映
+            await this.databaseService.reflectAllEntity(entityList);
         }
     }
 }

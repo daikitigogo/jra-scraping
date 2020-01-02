@@ -10,6 +10,8 @@ export enum ActionType {
     Click = "click",
     /** プルダウンなどの選択アクション */
     Select = "select",
+    /** 入力欄 */
+    Input = "input",
 };
 
 /**
@@ -126,6 +128,19 @@ export class Puppetman {
                 await this.page.waitFor(args.waitTime);
                 await this.page.click(args.selector)
             });
+        // 任意引数に従って待機処理を入れる
+        if (args.waitTime) {
+            await this.page.waitFor(args.waitTime);
+        }
+    }
+
+    /**
+     * 入力アクション
+     * @param args {NavigateArgs}
+     */
+    private async input(args: NavigateArgs): Promise<void> {
+        // 入力欄に入力
+        await this.page.type(args.selector, args.value);
         // 任意引数に従って待機処理を入れる
         if (args.waitTime) {
             await this.page.waitFor(args.waitTime);
