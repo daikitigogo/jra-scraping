@@ -20,7 +20,7 @@ services:
             context: ./dockerfiles/puppeteer
             dockerfile: ./Dockerfile
         volumes:
-            - ./dockerfiles/puppeteer/app:/app
+            - ./dockerfiles/puppeteer/volume:/app
         links:
             - mariadb
 

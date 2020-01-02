@@ -22,7 +22,7 @@ RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key
 # ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD true
 
 ENV APP_ROOT=/app/
-COPY ./app/package*.json ${APP_ROOT}
+COPY ./volume/package*.json ${APP_ROOT}
 
 WORKDIR ${APP_ROOT}
 
@@ -35,4 +35,4 @@ RUN npm install \
     && chown -R pptruser:pptruser /home/pptruser \
     && chown -R pptruser:pptruser ${APP_ROOT}/node_modules
 
-COPY ./app ${APP_ROOT}
+COPY ./volume ${APP_ROOT}
