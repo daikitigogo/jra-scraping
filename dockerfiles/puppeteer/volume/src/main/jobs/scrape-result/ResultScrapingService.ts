@@ -1,6 +1,6 @@
 import { ActionType, Puppetman, NavigateAction } from '#/share/utils/Puppetman';
 import * as dtos from '#/share/dtos';
-import { scrapingAllRace, takeRaceList } from '#/jobs/scrape-result/ScrapingOnBrowser';
+import { scrapingAllRace, takeRaceList } from '#/jobs/scrape-result/scriptOnBrowser';
 
 // 共通待ち時間
 const waitTime = 1000;

@@ -3,8 +3,8 @@ CREATE TABLE horse_master (
   horse_name VARCHAR(10) NOT NULL,
   birth_year INT NOT NULL,
   sex CHAR(1) NOT NULL,
-  dad_horse_name VARCHAR(10) ,
-  second_dad_horse_name VARCHAR(10) ,
+  dad_horse_name VARCHAR(20) ,
+  second_dad_horse_name VARCHAR(20) ,
   PRIMARY KEY(horse_id),
   UNIQUE(horse_name, birth_year)
 );

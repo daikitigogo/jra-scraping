@@ -1,25 +1,44 @@
 import { HorseScrapingService } from "#/jobs/scrape-horse/HorseScrapingService";
-import { Puppetman } from '#/share/utils/Puppetman';
+import { HorseMasterRepository } from "#/share/repositories/HorseMasterRepository";
+import { Pool } from "mariadb";
 
+/**
+ * 競走馬の親情報をスクレイピングで取得する
+ */
 export class HorseScrapingJob {
 
-    constructor(private horseScrapingService: HorseScrapingService) { }
+    /**
+     * コンストラクタ
+     * @param pool Pool
+     * @param scrapingService HorseScrapingService
+     * @param hmReps HorseMasterRepository
+     */
+    constructor(
+        private pool: Pool,
+        private scrapingService: HorseScrapingService,
+        private hmReps: HorseMasterRepository) { }
 
+    /**
+     * スクレイピング実行
+     */
     async run() {
-        const result = await this.horseScrapingService.execute('アーモンドアイ', 2015);
-        console.log(result);
+
+        const conn = await this.pool.getConnection();
+        try {
+            // 親情報未設定の競走馬を取得
+            const horseList = await this.hmReps.selectNoReflectParentInfo(conn);
+
+            for (const entity of horseList) {
+                // 競走馬検索から親情報を取得
+                const navigator = this.scrapingService.getNavigator(entity.horseName);
+                const result = await this.scrapingService.getParentHorseInfo(navigator, entity.horseName, entity.birthYear);
+                // DB更新
+                entity.dadHorseName = result.dadHorseName;
+                entity.secondDadHorseName = result.secondDadHorseName;
+                await this.hmReps.update(conn, entity);
+            }
+        } finally {
+            await conn.end();
+        }
     }
 };
-
-(async() => {
-    const puppetman = Puppetman.init({ args: ['--no-sandbox', '--disable-setuid-sandbox'], headless: true, dumpio: true });
-    const service = new HorseScrapingService(puppetman);
-    const job = new HorseScrapingJob(service);
-    await job.run();
-    try {
-    } catch (e) {
-        console.error(e);
-    } finally {
-        await (await puppetman).close();
-    }
-})();

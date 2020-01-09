@@ -4,17 +4,20 @@
   "description": "",
   "main": "src/main/index.ts",
   "scripts": {
-    "start": "ts-node --files -r tsconfig-paths/register",
-    "test": "ts-node --files -r tsconfig-paths/register ./src/test/index-spec.ts"
+    "start": "ts-node --files -r tsconfig-paths/register ./src/main/index.ts",
+    "test": "jest"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "@types/chai": "^4.2.7",
+    "@types/jest": "^24.0.25",
     "@types/node": "^12.12.14",
     "chai": "^4.2.0",
     "csv-parse": "^4.8.3",
+    "jest": "^24.9.0",
+    "ts-jest": "^24.2.0",
     "ts-node": "^8.5.4",
     "tsconfig-paths": "^3.9.0",
     "typescript": "^3.7.2"
@@ -27,5 +30,25 @@
     "mariadb": "^2.1.4",
     "puppeteer": "^2.0.0",
     "reflect-metadata": "^0.1.13"
+  },
+  "jest": {
+    "moduleFileExtensions": [
+      "ts",
+      "js"
+    ],
+    "transform": {
+      "^.+\\.ts$": "ts-jest"
+    },
+    "globals": {
+      "ts-jest": {
+        "tsConfig": "tsconfig.json"
+      }
+    },
+    "testMatch": [
+      "**/test/**/*.test.ts"
+    ],
+    "moduleNameMapper": {
+      "^#/(.+)": "<rootDir>/src/main/$1"
+    }
   }
 }

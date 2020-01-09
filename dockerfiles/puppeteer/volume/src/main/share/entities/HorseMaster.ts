@@ -1,15 +1,10 @@
-import { BaseEntity } from "./BaseEntity";
+import * as Entity from '../decorators/Entity';
 
 /**
  * horse_masterエンティティ
  */
-export class HorseMaster implements BaseEntity {
-
-    /** テーブル名 */
-    readonly tableName: string = 'horse_master';
-    /** 主キーセット */
-    readonly primaryKeySet: Set<string> = new Set(['horse_id']);
-
+@Entity.decorator({ tableName: 'horse_master',  primaryKeySet: new Set<string>(['horseId']) })
+export class HorseMaster {
     /** 馬ID */
     horseId: number = null;
     /** 馬名 */

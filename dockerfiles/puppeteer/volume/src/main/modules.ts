@@ -9,29 +9,47 @@ import { RaceDetailRepository } from './share/repositories/RaceDetailRepository'
 import { SpecialityRaceRepository } from './share/repositories/SpecialityRaceRepository';
 import { TurfPlaceMasterRepository } from './share/repositories/TurfPlaceMasterRepository';
 import { RefundRepository } from './share/repositories/RefundRepository';
+import { HorseScrapingJob } from './jobs/scrape-horse/HorseScrapingJob';
+import { HorseScrapingService } from './jobs/scrape-horse/HorseScrapingService';
 
-export const puppetman = Puppetman.init({ args: [ '--no-sandbox', '--disable-setuid-sandbox' ], headless: Boolean(process.env.NODE_PUPPETEER_HEADLESS) || true });
-export const scrapingService = new ResultScrapingService(puppetman);
-
-export const pool = mariadb.createPool({
+// 共通部品
+const puppetman = Puppetman.init({ args: [ '--no-sandbox', '--disable-setuid-sandbox' ], headless: Boolean(process.env.NODE_PUPPETEER_HEADLESS) || true });
+const pool = mariadb.createPool({
     host: process.env.NODE_DB_HOST,
     database: process.env.NODE_DB_DATABASE,
     user: process.env.NODE_DB_USER,
     password: process.env.NODE_DB_PASSWORD,
     connectionLimit: Number(process.env.NODE_DB_CONNECTION_LIMIT) || 1
 });
-export const databaseService = new ResultDatabaseService(
+const horseMasterRepository = new HorseMasterRepository();
+const raceDataRepository = new RaceDataRepository();
+const raceDetailRepository = new RaceDetailRepository();
+const refundRepository = new RefundRepository();
+const specialityRaceRepository = new SpecialityRaceRepository();
+const turfPlaceMasterRepository = new TurfPlaceMasterRepository();
+
+// レース結果ジョブ
+export const resultScrapingJob = new ResultScrapingJob(
+    new ResultScrapingService(puppetman),
+    new ResultDatabaseService(
+        pool,
+        horseMasterRepository,
+        raceDataRepository,
+        raceDetailRepository,
+        refundRepository,
+        specialityRaceRepository,
+        turfPlaceMasterRepository
+    )
+);
+
+// 競走馬親情報取得ジョブ
+export const horseScrapingJob = new HorseScrapingJob(
     pool,
-    new HorseMasterRepository(),
-    new RaceDataRepository(),
-    new RaceDetailRepository(),
-    new RefundRepository(),
-    new SpecialityRaceRepository(),
-    new TurfPlaceMasterRepository());
+    new HorseScrapingService(puppetman),
+    horseMasterRepository
+);
 
-export const resultScrapingJob = new ResultScrapingJob(scrapingService, databaseService);
-
-export async function close() {
+export const close = async() => {
     await (await puppetman).close();
     await pool.end();
 };

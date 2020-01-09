@@ -18,6 +18,22 @@ export class ResultScrapingJob {
         private databaseService: ResultDatabaseService) { }
 
     /**
+     * 引数をパースする
+     * @param json string
+     */
+    parseArgs(json: string): {year: string, months: string, day?: string} {
+        const parsed = JSON.parse(json);
+        const args = parsed;
+        if (!args.year || (args.months && !args.montsh.length)) {
+            throw new Error('Invalid ResultScrapingJob args!');
+        }
+        if (!args.months) {
+            args.months = Array.from({ length: 12 }).map((_, i) => `0${i + 1}`.slice(-2));
+        }
+        return args;
+    }
+
+    /**
      * スクレイピングを実行、結果をDBに保存する    
      * 日付、競馬場単位でトランザクション制御。既に処理済みの場合はスキップする
      * @param year string
