@@ -1,16 +1,17 @@
-import { Puppetman } from '#/share/utils/Puppetman';
-import { ResultScrapingService } from '#/jobs/scrape-result/ResultScrapingService';
-import { ResultDatabaseService } from '#/jobs/scrape-result/ResultDatabaseService';
-import { ResultScrapingJob } from "#/jobs/scrape-result/ResultScrapingJob";
+import { Puppetman } from '#/share/utility/scraping.utility';
+import { ResultDatabaseService } from '#/job/scrape-result/result.service';
+import { ResultScrapingJob } from "#/job/scrape-result/result.job";
 import * as mariadb from 'mariadb';
-import { HorseMasterRepository } from './share/repositories/HorseMasterRepository';
-import { RaceDataRepository } from './share/repositories/RaceDataRepository';
-import { RaceDetailRepository } from './share/repositories/RaceDetailRepository';
-import { SpecialityRaceRepository } from './share/repositories/SpecialityRaceRepository';
-import { TurfPlaceMasterRepository } from './share/repositories/TurfPlaceMasterRepository';
-import { RefundRepository } from './share/repositories/RefundRepository';
-import { HorseScrapingJob } from './jobs/scrape-horse/HorseScrapingJob';
-import { HorseScrapingService } from './jobs/scrape-horse/HorseScrapingService';
+import {
+    HorseMasterRepository,
+    RaceDataRepository,
+    RaceDetailRepository,
+    RefundRepository,
+    SpecialityRaceRepository,
+    TurfPlaceMasterRepository
+ } from "#/share/repository/plain.repository";
+import { HorseScrapingJob } from './job/scrape-horse/horse.job';
+import { HorseScrapingService } from './job/scrape-horse/horse.service';
 
 // 共通部品
 const puppetman = Puppetman.init({ args: [ '--no-sandbox', '--disable-setuid-sandbox' ], headless: Boolean(process.env.NODE_PUPPETEER_HEADLESS) || true });
@@ -30,7 +31,7 @@ const turfPlaceMasterRepository = new TurfPlaceMasterRepository();
 
 // レース結果ジョブ
 export const resultScrapingJob = new ResultScrapingJob(
-    new ResultScrapingService(puppetman),
+    puppetman,
     new ResultDatabaseService(
         pool,
         horseMasterRepository,

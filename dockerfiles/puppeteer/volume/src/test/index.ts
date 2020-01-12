@@ -130,24 +130,3 @@
 //     return value == null ? '' : value;
 // }
 
-import 'reflect-metadata';
-
-import * as Entity from '#/share/decorators/Entity';
-
-@Entity.decorator({ tableName: '', primaryKeySet: new Set(['prime']) })
-class TestEntity {
-
-    prime: string = null;
-    col1: string = null;
-    col2: number = null;
-}
-
-const meta = Reflect.getMetadata(Entity.key, new TestEntity().constructor);
-console.log(meta);
-
-// const obj = {};
-// const key = 'aaa';
-// console.log(Reflect.set(obj, key, 1));
-// console.log(Object.defineProperty(obj, 'bbb', {}));
-
-

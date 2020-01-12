@@ -11,10 +11,8 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@types/chai": "^4.2.7",
     "@types/jest": "^24.0.25",
     "@types/node": "^12.12.14",
-    "chai": "^4.2.0",
     "csv-parse": "^4.8.3",
     "jest": "^24.9.0",
     "ts-jest": "^24.2.0",
