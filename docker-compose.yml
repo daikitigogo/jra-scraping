@@ -9,7 +9,7 @@ services:
         ports:
             - "3306:3306"
         volumes:
-            - ./dockerfiles/mariadb/volume:/var/lib/mysql
+            - ./volumes/mariadb:/var/lib/mysql
         environment:
             MYSQL_ROOT_PASSWORD: root
             MYSQL_DATABASE: jra
@@ -20,7 +20,7 @@ services:
             context: ./dockerfiles/puppeteer
             dockerfile: ./Dockerfile
         volumes:
-            - ./dockerfiles/puppeteer/volume:/app
+            - ./volumes/puppeteer:/app
         links:
             - mariadb
 

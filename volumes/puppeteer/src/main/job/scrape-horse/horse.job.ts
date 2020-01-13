@@ -40,6 +40,8 @@ export class HorseScrapingJob {
             // 親情報未設定の競走馬を取得
             const horseList = await this.hmReps.selectNoReflectParentInfo(conn);
 
+            logger.info(`Total count is ${horseList.length}`);
+
             for (const entity of horseList) {
                 // 競走馬検索から親情報を取得
                 const base = baseNavi(entity.horseName);
