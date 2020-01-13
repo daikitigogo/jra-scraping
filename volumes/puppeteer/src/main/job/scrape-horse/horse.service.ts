@@ -53,12 +53,20 @@ export class HorseDatabaseService {
         await conn.beginTransaction();
         try {
             for (const entitySet of entitySetList) {
+                // 特別レース未登録なら登録
                 const specialityRaceId = await this.reflectSpecialityRace(conn, entitySet.specialityRace);
                 entitySet.raceData.specialityRaceId = specialityRaceId;
+                // 競馬場コードの採番、登録済みレースかの判定を行う
                 const raceData = await this.completeRaceData(conn, entitySet.raceData);
+                // 登録済みレースの場合は、同じレース詳細IDを使いまわす
                 entitySet.raceDetail.raceDetailId = raceData.raceDetailId;
-                await this.rdtRepos.insert(conn, entitySet.raceDetail);
-                await this.rdRepos.insert(conn, raceData);
+                const writeRsp = await this.rdtRepos.insert(conn, entitySet.raceDetail);
+                // 未登録レースの場合はレース情報も新規登録
+                if (!raceData.raceDetailId) {
+                    raceData.raceDetailId = writeRsp.insertId;
+                    await this.rdRepos.insert(conn, raceData);
+                }
+                // 競馬場マスタ未登録の場合は採番したコードで新規登録
                 if (entitySet.turfPlaceMaster.turfPlaceCode == 'X0') {
                     entitySet.turfPlaceMaster.turfPlaceCode = raceData.turfPlaceCode;
                     await this.tpmRepos.insert(conn, entitySet.turfPlaceMaster);
@@ -68,6 +76,7 @@ export class HorseDatabaseService {
             await conn.commit();
         } catch(e) {
             await conn.rollback();
+            throw e;
         } finally {
             await conn.end();
         }

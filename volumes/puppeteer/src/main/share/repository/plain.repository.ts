@@ -159,8 +159,6 @@ export class HorseMasterRepository extends EntityRepository<HorseMaster> {
                 AND NULLIF(second_dad_horse_name, '') IS NULL
             ORDER BY
                 horse_id
-            LIMIT
-                100
         `;
         return await super.select<never, HorseMaster>(conn, sql);
     }
@@ -294,6 +292,6 @@ export class TurfPlaceMasterRepository extends EntityRepository<TurfPlaceMaster>
             ;
         `;
         const result = await super.select<never, TurfPlaceMaster>(conn, sql);
-        return result.length == 1 ? result[0].turfPlaceCode : 'XA';
+        return result[0].turfPlaceCode || 'X@';
     }
 };

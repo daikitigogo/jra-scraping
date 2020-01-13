@@ -23,7 +23,7 @@ export const takeDadInfo = (elements: Element[]) => {
             secondDadHorseName: e.children[3].children[1].textContent.trim()
         };
     })
-    .reduce((a, c) => a.concat(c), []);
+    .find((_, i) => i == 0);
 };
 
 /**

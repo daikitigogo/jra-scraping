@@ -54,13 +54,16 @@ export class HorseScrapingJob {
             const pastRaceList = await puppetman.execute(goalNavi(targetHorse.onclick), pastRaceSelector, takePastRaceList)
                 .then((r: any[]) => r.map(x => new PastRaceDataDto(x)));
             // 親情報を抜き出し
-            const parent = await puppetman.execute(goalNavi(targetHorse.onclick), parentInfoSelector, takeDadInfo) as ParentInfoDto;
+            const parent = await puppetman.execute([], parentInfoSelector, takeDadInfo) as ParentInfoDto;
             logger.info(`Regist start! count: ${i + 1}/${horseList.length}`);
             // エンティティに親情報を設定
             entity.dadHorseName = parent.dadHorseName;
             entity.secondDadHorseName = parent.secondDadHorseName;
+            logger.debug(`pastRaceList: ${JSON.stringify(pastRaceList)}`);
+            logger.debug(`parent: ${JSON.stringify(parent)}`);
             // DB反映
             const entitySetList = this.toEntitySetList(entity, pastRaceList, turfPlaceList);
+            logger.info(`entitySetListSize: ${entitySetList.length}`);
             this.databaseService.reflect(entitySetList, entity);
         }
     }
@@ -81,6 +84,7 @@ export class HorseScrapingJob {
         return pastRaceList
             .map(p => {
                 const turfPlaceMaster = turfPlaceList.find(t => t.turfPlaceName.includes(p.placeName));
+                logger.debug(JSON.stringify(turfPlaceMaster));
                 return {
                     turfPlaceMaster: {
                         turfPlaceCode: turfPlaceMaster ? turfPlaceMaster.turfPlaceCode : 'X0',
@@ -90,7 +94,7 @@ export class HorseScrapingJob {
                     pastRaceDto: p
                 };
             })
-            .filter(x => x.turfPlaceMaster.turfPlaceCode.substr(0, 1) == 'x')
+            .filter(x => x.turfPlaceMaster.turfPlaceCode.substr(0, 1) == 'X')
             .map(x => {
                 const p = x.pastRaceDto;
                 const raceData: RaceData = {
