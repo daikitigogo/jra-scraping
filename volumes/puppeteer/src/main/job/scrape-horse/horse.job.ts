@@ -82,16 +82,20 @@ export class HorseScrapingJob {
             .map(p => {
                 const turfPlaceMaster = turfPlaceList.find(t => t.turfPlaceName.includes(p.placeName));
                 return {
-                    turfPlaceCode: turfPlaceMaster ? turfPlaceMaster.turfPlaceCode : 'X0',
+                    turfPlaceMaster: {
+                        turfPlaceCode: turfPlaceMaster ? turfPlaceMaster.turfPlaceCode : 'X0',
+                        turfPlaceName: p.placeName,
+                        roundType: 'X'
+                    },
                     pastRaceDto: p
                 };
             })
-            .filter(x => x.turfPlaceCode.substr(0, 1) == 'x')
+            .filter(x => x.turfPlaceMaster.turfPlaceCode.substr(0, 1) == 'x')
             .map(x => {
                 const p = x.pastRaceDto;
                 const raceData: RaceData = {
                     dateOfRace: p.raceDate,
-                    turfPlaceCode: x.turfPlaceCode,
+                    turfPlaceCode: x.turfPlaceMaster.turfPlaceCode,
                     raceNumber: 1,
                     raceType: p.raceType == 'ダ' ? '2' : '1',
                     raceDistance: +p.distance,
@@ -121,7 +125,8 @@ export class HorseScrapingJob {
                 return {
                     raceData,
                     raceDetail,
-                    specialityRace
+                    specialityRace,
+                    turfPlaceMaster: x.turfPlaceMaster
                 };
             });
     }

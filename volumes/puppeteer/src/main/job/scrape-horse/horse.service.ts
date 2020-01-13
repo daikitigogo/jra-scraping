@@ -59,6 +59,10 @@ export class HorseDatabaseService {
                 entitySet.raceDetail.raceDetailId = raceData.raceDetailId;
                 await this.rdtRepos.insert(conn, entitySet.raceDetail);
                 await this.rdRepos.insert(conn, raceData);
+                if (entitySet.turfPlaceMaster.turfPlaceCode == 'X0') {
+                    entitySet.turfPlaceMaster.turfPlaceCode = raceData.turfPlaceCode;
+                    await this.tpmRepos.insert(conn, entitySet.turfPlaceMaster);
+                }
             }
             await this.hmRepos.update(conn, horseMaster);
             await conn.commit();
@@ -85,9 +89,9 @@ export class HorseDatabaseService {
 
         const result = {...raceData};
 
-        // 初登録の競馬場の場合はコードを採番する
+        // 初登録の競馬場の場合はコードを採番し、新規に登録する
         if (raceData.turfPlaceCode == 'X0') {
-            const maxTurfPlaceCode = 'MAX';
+            const maxTurfPlaceCode = await this.tpmRepos.selectMaxTurfPlaceCode(conn);
             const prefix = maxTurfPlaceCode.substr(0, 1);
             const alpha = maxTurfPlaceCode.substr(1);
             result.turfPlaceCode = prefix + String.fromCodePoint(alpha.codePointAt(0) + 1);
