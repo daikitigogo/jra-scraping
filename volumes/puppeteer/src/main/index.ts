@@ -19,6 +19,7 @@ const executeJob = async (jobName: string, params: string[]) => {
         case 'horse':
             return await modules.horseScrapingJob.run();
         default:
+            throw new Error(`Invalid jobName. ${jobName}`);
     }
 };
 

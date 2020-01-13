@@ -37,7 +37,7 @@ export class ResultScrapingJob {
         return {
             year,
             day,
-            months: [month] || Array.from({ length: 12 }).map((_, i) => `0${i + 1}`.slice(-2)),
+            months: month ? [month] : Array.from({ length: 12 }).map((_, i) => `0${i + 1}`.slice(-2)),
         };
     }
 
