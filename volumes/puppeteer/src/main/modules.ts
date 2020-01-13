@@ -11,6 +11,7 @@ import {
     TurfPlaceMasterRepository
  } from "#/share/repository/plain.repository";
 import { HorseScrapingJob } from './job/scrape-horse/horse.job';
+import { HorseDatabaseService } from './job/scrape-horse/horse.service';
 
 // 共通部品
 const puppetman = Puppetman.init({ args: [ '--no-sandbox', '--disable-setuid-sandbox' ], headless: Boolean(process.env.NODE_PUPPETEER_HEADLESS) || true });
@@ -44,9 +45,15 @@ export const resultScrapingJob = new ResultScrapingJob(
 
 // 競走馬親情報取得ジョブ
 export const horseScrapingJob = new HorseScrapingJob(
-    pool,
     puppetman,
-    horseMasterRepository
+    new HorseDatabaseService(
+        pool,
+        horseMasterRepository,
+        raceDataRepository,
+        raceDetailRepository,
+        specialityRaceRepository,
+        turfPlaceMasterRepository
+    )
 );
 
 export const close = async() => {

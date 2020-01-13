@@ -63,7 +63,7 @@ export class Puppetman {
      * ナビゲーターの指示に従い、目的ページまで遷移する
      * @param navigator NavigateAction[]
      */
-    async execute(navigator: NavigateAction[], selector: string, script: (elements: Element[]) => any): Promise<object[]> {
+    async execute(navigator: NavigateAction[], selector: string, script: (elements: Element[]) => any): Promise<any> {
         // ナビゲーターの設定通りに目的ページまで遷移する
         for (const navi of navigator) {
             await this[navi.type](navi.args);

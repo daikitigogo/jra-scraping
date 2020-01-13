@@ -29,9 +29,9 @@ export class RaceData {
     /** レース種別 */
     raceType: string = null;
     /** 天候 */
-    weather: string = null;
+    weather?: string = null;
     /** 馬場状態 */
-    groundCondition: string = null;
+    groundCondition?: string = null;
     /** 距離 */
     raceDistance: number = null;
     /** 対象馬齢 */
@@ -43,11 +43,11 @@ export class RaceData {
     /** 牝馬限定 */
     mareOnly: string = null;
     /** 特別レースID */
-    specialityRaceId: number = null;
+    specialityRaceId?: number = null;
     /** レース詳細ID */
     raceDetailId: number = null;
     /** 払戻ID */
-    refundId: number = null;
+    refundId?: number = null;
 };
 
 /** レース詳細データ */
@@ -68,17 +68,17 @@ export class RaceDetail {
     /** 斤量 */
     handicapWeight: number = null;
     /** 単勝人気 */
-    winPop: number = null;
+    winPop?: number = null;
     /** 馬体重 */
-    horseWeight: number = null;
+    horseWeight?: number = null;
     /** 着順 */
-    orderOfFinish: number = null;
+    orderOfFinish?: number = null;
     /** 走破時計 */
-    finishTime: number = null;
+    finishTime?: number = null;
     /** 着差 */
-    margin: string = null;
+    margin?: string = null;
     /** 上り3F */
-    timeOf3f: number = null;
+    timeOf3f?: number = null;
 };
 
 /** 払戻情報 */

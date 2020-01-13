@@ -196,6 +196,24 @@ export class RaceDataRepository extends EntityRepository<RaceData> {
         `;
         return super.select(conn, sql, entity);
     }
+
+    /**
+     * 
+     * @param conn Connection
+     * @param cond RaceData
+     */
+    async selectTargetRaces(conn: Connection, entity: RaceData): Promise<RaceData[]> {
+        const sql = `
+            SELECT
+                *
+            FROM
+                ${super.tableName()}
+            WHERE
+                date_of_race = :dateOfRace
+                AND turf_place_code = :turfPlaceCode
+        `;
+        return super.select(conn, sql, entity);
+    }
 };
 
 /**
