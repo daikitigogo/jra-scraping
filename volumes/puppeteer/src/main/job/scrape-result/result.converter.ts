@@ -1,5 +1,6 @@
 import * as entities from '#/share/entity/plain.entity';
 import * as dtos from './result.dto';
+import { timeStringToMilis } from '#/share/utility/function.utility';
 
 /**
  * レース名に含まれていたら特別レースではないと判断するキーワード
@@ -15,18 +16,6 @@ const notSpecialRaceKeywords = [
     '3勝クラス',
     'サラ系',
 ];
-
-/**
- * 走破時計を取得する(ms)
- * @param finishTime string
- */
-const getFinishTime = (finishTime: string) => {
-    const arr = finishTime.split(':');
-    if (arr.length < 2) {
-        return Number(finishTime);
-    }
-    return (Number(arr[0]) * 60 + Number(arr[1])) * 1000;
-};
 
 /** オッズコードマッピング */
 const oddsMapping = new Map<string, string>([
@@ -118,7 +107,7 @@ export class DtoToEntity {
         result.winPop = Number(dto.pop);
         result.horseWeight = Number(dto.horseWeight);
         result.orderOfFinish = Number(dto.place);
-        result.finishTime = getFinishTime(dto.time);
+        result.finishTime = timeStringToMilis(dto.time);
         result.margin = dto.margin;
         result.timeOf3f = Number(dto.fTime);
         return result;

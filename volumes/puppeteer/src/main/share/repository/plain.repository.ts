@@ -196,6 +196,24 @@ export class RaceDataRepository extends EntityRepository<RaceData> {
         `;
         return super.select(conn, sql, entity);
     }
+
+    /**
+     * 
+     * @param conn Connection
+     * @param cond RaceData
+     */
+    async selectTargetRaces(conn: Connection, entity: RaceData): Promise<RaceData[]> {
+        const sql = `
+            SELECT
+                *
+            FROM
+                ${super.tableName()}
+            WHERE
+                date_of_race = :dateOfRace
+                AND turf_place_code = :turfPlaceCode
+        `;
+        return super.select(conn, sql, entity);
+    }
 };
 
 /**
@@ -259,5 +277,23 @@ export class TurfPlaceMasterRepository extends EntityRepository<TurfPlaceMaster>
     /** Constructor */
     constructor() {
         super(TurfPlaceMaster);
+    }
+
+    /**
+     * X始まりの中で最大の競馬場コードを返す
+     * @param conn Connection
+     */
+    async selectMaxTurfPlaceCode(conn: Connection): Promise<string> {
+        const sql = `
+            SELECT
+                MAX(turf_place_code) AS turf_place_code
+            FROM
+                turf_place_master
+            WHERE
+                turf_place_code LIKE 'X_'
+            ;
+        `;
+        const result = await super.select<never, TurfPlaceMaster>(conn, sql);
+        return result.length == 1 ? result[0].turfPlaceCode : 'XA';
     }
 };
