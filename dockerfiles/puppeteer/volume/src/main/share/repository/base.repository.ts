@@ -1,4 +1,5 @@
 import { Connection } from 'mariadb';
+import { logger } from '#/logger';
 import * as fu from '#/share/utility/function.utility';
 
 /**
@@ -23,8 +24,11 @@ export class DataAccessBase {
      * @returns Promise<T[]>
      */
     protected async select<C, R>(conn: Connection, sql: string, value?: C): Promise<R[]> {
-        return await conn.query({ namedPlaceholders: true, sql }, value)
-            .then((rs: object[]) => rs.map(r => this.snakeObjToCamelObj(r)));
+        logger.debug(`sql: ${sql}, value: ${JSON.stringify(value)}`);
+        const result = await conn.query({ namedPlaceholders: true, sql }, value)
+            .then((rs: object[]) => rs.map(r => this.snakeObjToCamelObj<R>(r)));
+        logger.debug(`result: ${JSON.stringify(result)}`);
+        return result;
     }
 
     /**
@@ -35,7 +39,10 @@ export class DataAccessBase {
      * @returns Promise<WriteResponse>
      */
     protected async write(conn: Connection, sql: string, value?: any): Promise<WriteResponse> {
-        return await conn.query({ namedPlaceholders: true, sql }, value);
+        logger.debug(`sql: ${sql}, value: ${JSON.stringify(value)}`);
+        const result = await conn.query({ namedPlaceholders: true, sql }, value);
+        logger.debug(`result: ${JSON.stringify(result)}`);
+        return result;
     }
 
     /**

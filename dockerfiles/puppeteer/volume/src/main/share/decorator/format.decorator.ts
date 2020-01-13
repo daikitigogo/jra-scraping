@@ -33,10 +33,11 @@ export class Format {
         const metadata: FormatArg[] = Reflect.getMetadata(Format.key, target, prop);
         if (!metadata) return value;
 
-        return metadata.reduce((a, c) => {
+        const result = metadata.reduce((a, c) => {
             const regexp = new RegExp(c.regexp, 'g');
             return a.replace(regexp, c.replace || '');
         }, value);
+        return result;
     }
 }
 
@@ -71,10 +72,10 @@ export class CodeMapping {
         const metadata: CodeMappingArg[] = Reflect.getMetadata(CodeMapping.key, target, prop);
         if (!metadata || !value) return value;
 
-        const result = metadata.find(x => x.codeId == value);
+        const result = metadata.find(x => x.codeValue == value);
         if (!result) {
             throw new Error(`Not found! ${prop}'s code mapping. value: ${value}`);
         }
-        return result;
+        return result.codeId;
     }
 }

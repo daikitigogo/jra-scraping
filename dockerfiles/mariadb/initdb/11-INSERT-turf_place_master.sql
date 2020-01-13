@@ -1,3 +1,7 @@
+SET CHARSET UTF8;
+SET CHARACTER_SET_CLIENT = UTF8;
+SET CHARACTER_SET_CONNECTION = UTF8;
+
 INSERT INTO turf_place_master VALUES ('M1', '東京', 'L');
 INSERT INTO turf_place_master VALUES ('M2', '京都', 'R');
 INSERT INTO turf_place_master VALUES ('M3', '中山', 'R');

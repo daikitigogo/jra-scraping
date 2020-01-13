@@ -8,16 +8,19 @@ class DecoratorExecutor {
     decorate() {
         Object.entries(this).forEach(([k, v]) => {
             if (v instanceof DecoratorExecutor) {
-                v.decorate();
+                const obj = v.decorate();
+                Reflect.set(this, k, obj);
             }
             if (v instanceof Array) {
-                v.forEach(x => (x instanceof DecoratorExecutor) && x.decorate());
+                const arr = v.map(x => (x instanceof DecoratorExecutor) && x.decorate());
+                Reflect.set(this, k, arr);
             }
-            Reflect.set(this, k, Format.format(this, k, v));
-            Reflect.set(this, k, CodeMapping.format(this, k, v));
-            const formatValue = Reflect.get(this, k);
-            Required.validate(this, k, formatValue);
-            ConditionRequired.validate(this, k, formatValue);
+            const format1 = Format.format(this, k, v);
+            Reflect.set(this, k, format1);
+            const format2 = CodeMapping.format(this, k, format1);
+            Reflect.set(this, k, format2);
+            Required.validate(this, k, format2);
+            ConditionRequired.validate(this, k, format2);
         });
         return this;
     }

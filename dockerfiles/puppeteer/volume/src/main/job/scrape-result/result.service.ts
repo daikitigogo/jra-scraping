@@ -148,7 +148,7 @@ export class ResultDatabaseService {
         // 馬名と誕生年が一致するマスタデータが存在するかを確認
         const entity = await this.hmRepos.selectOneByHorseNameAndBirthYear(conn, horseMaster);
         // 存在する場合は取得したhorseIdを返却
-        if (entity.horseId) {
+        if (entity) {
             return entity.horseId;
         }
         // 存在しない場合は新規に登録、登録したhorseIdを返す
@@ -169,7 +169,7 @@ export class ResultDatabaseService {
         // レース名で検索
         const entity = await this.srRepos.selectOneBySpecialityRaceName(conn, specialityRace);
         // 存在する場合は取得したspecialityRaceIdを返す
-        if (entity.specialityRaceId) {
+        if (entity) {
             return entity.specialityRaceId;
         }
         // 存在しない場合は新規に登録、登録したIDを返す

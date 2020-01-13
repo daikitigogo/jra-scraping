@@ -9,10 +9,10 @@ import { logger } from './logger';
  * @param jobName string
  * @param param string
  */
-const executeJob = async (jobName: string, param: string) => {
+const executeJob = async (jobName: string, params: string[]) => {
     switch(jobName) {
         case 'result':
-            const arg = modules.resultScrapingJob.parseArgs(param);
+            const arg = modules.resultScrapingJob.parseArgs(params);
             for (const month of arg.months) {
                 return await modules.resultScrapingJob.run(arg.year, month, arg.day);
             }
@@ -32,7 +32,8 @@ const main = async(args: string[]) => {
         throw new Error('Invalid arguments!');
     }
     try {
-        await executeJob(args[0], args[1]);
+        const jobArgs = args.length > 1 ? args.slice(1) : [];
+        await executeJob(args[0], jobArgs);
     } catch(e) {
         logger.error(e);
     } finally {

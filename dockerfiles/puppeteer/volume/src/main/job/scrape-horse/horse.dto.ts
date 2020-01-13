@@ -1,10 +1,10 @@
-export class HorseData {
+export class HorseDataDto {
     horseName: string;
     horseAge: string;
     onclick: string;
 }
 
-export class ParentInfo {
+export class ParentInfoDto {
     dadHorseName: string;
     secondDadHorseName: string;
 }

@@ -1,10 +1,15 @@
 import { Puppetman } from '#/share/utility/scraping.utility';
-import { Navi } from "#/job/scrape-result/result.navigator";
-import { ResultDatabaseService } from "#/job/scrape-result/result.service";
-import { DtoToEntity } from "#/job/scrape-result/result.converter";
-import { scrapingAllRace, takeRaceList } from '#/job/scrape-result/result.script';
+import { baseNavi, goalNavi } from "./result.navigator";
+import { ResultDatabaseService } from "./result.service";
+import { DtoToEntity } from "./result.converter";
+import { scrapingAllRace, takeRaceList } from './result.script';
 import * as dtos from './result.dto';
 import { logger } from "#/logger";
+
+/** 過去レース結果一覧からのスクレイピングセレクタ */
+const targetRacesSelector = '#past_result > ul.past_result_line.mt20 > li > div';
+/** 全レース結果表示からのスクレイピングセレクタ */
+const raceListSelector = '[id^="race_result_"]';
 
 /**
  * 過去レース結果一覧からレース結果を取得する
@@ -24,16 +29,16 @@ export class ResultScrapingJob {
      * 引数をパースする
      * @param json string
      */
-    parseArgs(json: string): {year: string, months: string, day?: string} {
-        const parsed = JSON.parse(json);
-        const args = parsed;
-        if (!args.year || (args.months && !args.montsh.length)) {
-            throw new Error('Invalid ResultScrapingJob args!');
-        }
-        if (!args.months) {
-            args.months = Array.from({ length: 12 }).map((_, i) => `0${i + 1}`.slice(-2));
-        }
-        return args;
+    parseArgs(params: string[]): {year: string, months: string[], day: string} {
+        if (params.length == 0) throw new Error();
+        const year = params[0];
+        const month = params.find((_, i) => i == 1);
+        const day = params.find((_, i) => i == 2);
+        return {
+            year,
+            day,
+            months: [month] || Array.from({ length: 12 }).map((_, i) => `0${i + 1}`.slice(-2)),
+        };
     }
 
     /**
@@ -49,8 +54,8 @@ export class ResultScrapingJob {
 
         // 過去レース結果一覧を取得
         const puppetman = await this.puppetman;
-        const base = Navi.base(year, month);
-        const targetRaces = await puppetman.execute(base, '#past_result > ul.past_result_line.mt20 > li > div', takeRaceList)
+        const base = baseNavi(year, month);
+        const targetRaces = await puppetman.execute(base, targetRacesSelector, takeRaceList)
             .then((jsArr: object[]) => jsArr.map(jsObj => new dtos.TargetDataDto(jsObj).decorate()))
             .then(targets => targets.filter(t => !day || t.date == `${+month}/${+day}`));
         if (targetRaces.length == 0) {
@@ -76,7 +81,7 @@ export class ResultScrapingJob {
             }
 
             // １開催の全レースを取得する
-            const raceList = await puppetman.execute(Navi.goal(base, target.onclick), '[id^="race_result_"]', scrapingAllRace)
+            const raceList = await puppetman.execute(goalNavi(base, target.onclick), raceListSelector, scrapingAllRace)
                 .then((jsArr: object[]) => jsArr.map(jsObj => new dtos.RaceDataDto(jsObj).decorate()));
             // エンティティリストに変換する
             const entityList = dtoToEntity.convert(dateOfRace, turfPlaceCode, raceList);

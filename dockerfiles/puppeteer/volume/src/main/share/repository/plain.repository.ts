@@ -59,9 +59,9 @@ class EntityRepository<T> extends DataAccessBase {
      */
     async selectAll(conn: Connection): Promise<T[]> {
         const sql = `SELECT * FROM ${this.tableName()};`;
-        logger.debug('Call selectAll. sql: ${sql}')
+        logger.debug(`Call selectAll.`)
         const result = await super.select<any, T>(conn, sql);
-        logger.debug(`End selectAll. result : ${result}`);
+        logger.debug(`End selectAll.`);
         return result;
     }
 
@@ -74,9 +74,9 @@ class EntityRepository<T> extends DataAccessBase {
     async selectOne(conn: Connection, primary: object): Promise<T> {
         const where = this.primaryKeySet().map(p => `${p} = :${fu.snakeToCamel(p)}`).join(' AND ');
         const sql = `SELECT * FROM ${this.tableName()} WHERE ${where};`;
-        logger.debug(`Call selectOne. sql: ${sql}, value: ${JSON.stringify(primary)}`);
+        logger.debug(`Call selectOne.`);
         const result = await super.select<object, T>(conn, sql, primary);
-        logger.debug(`End selectOne. result: ${result}`);
+        logger.debug(`End selectOne.`);
         return result.find((_, i) => i == 0);
     }
 
@@ -88,9 +88,9 @@ class EntityRepository<T> extends DataAccessBase {
      */
     async insert(conn: Connection, entity: T): Promise<WriteResponse> {
         const sql = `INSERT INTO ${this.tableName()} (${Object.keys(entity).map(k => fu.camelToSnake(k)).join(', ')}) VALUES (${Object.keys(entity).map(k => ':' + k).join(', ')})`;
-        logger.debug(`Call insert. sql: ${sql}, entity: ${JSON.stringify(entity)}`);
+        logger.debug(`Call insert.`);
         const result = await super.write(conn, sql, entity);
-        logger.debug(`End insert. result: ${result}`);
+        logger.debug(`End insert.`);
         return result;
     }
 
@@ -105,8 +105,10 @@ class EntityRepository<T> extends DataAccessBase {
         const updates = noPrimary.map(k => `${fu.camelToSnake(k)} = :${k}`);
         const where = this.primaryKeySet().map(p => `${p} = :${fu.snakeToCamel(p)}`).join(' AND ');
         const sql = `UPDATE ${this.tableName()} SET ${updates.join(', ')} WHERE ${where}`;
-        logger.debug(`Call update. sql: ${sql}`);
-        return await super.write(conn, sql, entity);
+        logger.debug(`Call update.`);
+        const result = await super.write(conn, sql, entity);
+        logger.debug(`End update.`)
+        return result;
     }
 }
 
@@ -157,6 +159,8 @@ export class HorseMasterRepository extends EntityRepository<HorseMaster> {
                 AND NULLIF(second_dad_horse_name, '') IS NULL
             ORDER BY
                 horse_id
+            LIMIT
+                100
         `;
         return await super.select<never, HorseMaster>(conn, sql);
     }
