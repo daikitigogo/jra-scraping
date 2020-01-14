@@ -2,6 +2,7 @@
     "compileOnSave": false,
     "compilerOptions": {
       "outDir": "./dist",
+      "baseUrl": "./",
       "declaration": false,
       "moduleResolution": "node",
       "emitDecoratorMetadata": true,
@@ -17,7 +18,6 @@
       ],
       "lib": [
         "es2018",
-        "es2017",
         "dom"
       ]
     }
