@@ -1,6 +1,6 @@
-import { Required, ConditionRequired } from '#/share/decorator/validate.decorator';
-import { Format, CodeMapping } from '#/share/decorator/format.decorator';
-import {RaceData, RaceDetail, Refund, HorseMaster, SpecialityRace } from '#/share/entity/plain.entity';
+import { Required, ConditionRequired } from '../../share/decorator/validate.decorator';
+import { Format, CodeMapping } from '../../share/decorator/format.decorator';
+import {RaceData, RaceDetail, Refund, HorseMaster, SpecialityRace } from '../../share/entity/plain.entity';
 
 class DecoratorExecutor {
 

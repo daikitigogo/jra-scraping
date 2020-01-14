@@ -1,10 +1,10 @@
-import { Puppetman } from '#/share/utility/scraping.utility';
+import { Puppetman } from '../../share/utility/scraping.utility';
 import { baseNavi, goalNavi } from "./result.navigator";
 import { ResultDatabaseService } from "./result.service";
 import { DtoToEntity } from "./result.converter";
 import { scrapingAllRace, takeRaceList } from './result.script';
 import * as dtos from './result.dto';
-import { logger } from "#/logger";
+import { logger } from "../../logger";
 
 /** 過去レース結果一覧からのスクレイピングセレクタ */
 const targetRacesSelector = '#past_result > ul.past_result_line.mt20 > li > div';

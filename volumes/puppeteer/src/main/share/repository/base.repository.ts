@@ -1,6 +1,6 @@
 import { Connection } from 'mariadb';
-import { logger } from '#/logger';
-import * as fu from '#/share/utility/function.utility';
+import { logger } from '../../logger';
+import * as fu from '../utility/function.utility';
 
 /**
  * Write method response

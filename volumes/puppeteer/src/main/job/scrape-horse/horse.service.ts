@@ -4,9 +4,9 @@ import {
     RaceDetailRepository,
     SpecialityRaceRepository,
     TurfPlaceMasterRepository
- } from "#/share/repository/plain.repository";
+ } from "../../share/repository/plain.repository";
 import { EntitySetDto } from "./horse.dto";
-import { HorseMaster, RaceData, TurfPlaceMaster, SpecialityRace } from "#/share/entity/plain.entity";
+import { HorseMaster, RaceData, TurfPlaceMaster, SpecialityRace } from "../../share/entity/plain.entity";
 import { Connection, Pool } from 'mariadb';
 
 export class HorseDatabaseService {

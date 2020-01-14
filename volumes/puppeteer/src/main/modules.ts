@@ -1,6 +1,6 @@
-import { Puppetman } from '#/share/utility/scraping.utility';
-import { ResultDatabaseService } from '#/job/scrape-result/result.service';
-import { ResultScrapingJob } from "#/job/scrape-result/result.job";
+import { Puppetman } from './share/utility/scraping.utility';
+import { ResultDatabaseService } from './job/scrape-result/result.service';
+import { ResultScrapingJob } from "./job/scrape-result/result.job";
 import * as mariadb from 'mariadb';
 import {
     HorseMasterRepository,
@@ -9,7 +9,7 @@ import {
     RefundRepository,
     SpecialityRaceRepository,
     TurfPlaceMasterRepository
- } from "#/share/repository/plain.repository";
+ } from "./share/repository/plain.repository";
 import { HorseScrapingJob } from './job/scrape-horse/horse.job';
 import { HorseDatabaseService } from './job/scrape-horse/horse.service';
 

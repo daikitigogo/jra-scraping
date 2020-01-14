@@ -1,6 +1,6 @@
-import * as entities from '#/share/entity/plain.entity';
+import * as entities from '../../share/entity/plain.entity';
 import * as dtos from './result.dto';
-import { timeStringToMilis } from '#/share/utility/function.utility';
+import { timeStringToMilis } from '../../share/utility/function.utility';
 
 /**
  * レース名に含まれていたら特別レースではないと判断するキーワード

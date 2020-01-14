@@ -1,4 +1,4 @@
-import { ActionType, NavigateAction } from '#/share/utility/scraping.utility';
+import { ActionType, NavigateAction } from '../../share/utility/scraping.utility';
 
 // 共通待ち時間
 const waitTime = 1000;

@@ -9,7 +9,7 @@ import {
 } from '../entity/plain.entity';
 import { Connection } from 'mariadb';
 import { Entity } from '../decorator/table.decorator';
-import { logger } from '#/logger';
+import { logger } from '../../logger';
 import * as fu from '../utility/function.utility';
 import 'reflect-metadata';
 

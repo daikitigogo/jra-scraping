@@ -1,11 +1,11 @@
-import { Puppetman } from '#/share/utility/scraping.utility';
-import { baseNavi, goalNavi } from '#/job/scrape-horse/horse.navigator';
+import { Puppetman } from '../../share/utility/scraping.utility';
+import { baseNavi, goalNavi } from '../../job/scrape-horse/horse.navigator';
 import { HorseDataDto, ParentInfoDto, PastRaceDataDto, EntitySetDto } from './horse.dto';
 import { takeHorseList, takeDadInfo, takePastRaceList } from './horse.script';
-import { HorseMaster, RaceData, TurfPlaceMaster, RaceDetail, SpecialityRace } from '#/share/entity/plain.entity';
-import { logger } from '#/logger';
+import { HorseMaster, RaceData, TurfPlaceMaster, RaceDetail, SpecialityRace } from '../../share/entity/plain.entity';
+import { logger } from '../../logger';
 import { HorseDatabaseService } from './horse.service';
-import { timeStringToMilis } from '#/share/utility/function.utility';
+import { timeStringToMilis } from '../../share/utility/function.utility';
 
 /** 検索結果一覧取得セレクタ */
 const targetHorsesSelector = `[onclick^="return doAction('/JRADB/accessU.html'"]`;

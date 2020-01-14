@@ -1,7 +1,10 @@
+import sourceMap = require('source-map-support');
+sourceMap.install();
+
 import * as dotenv from 'dotenv';
 dotenv.config();
 
-import * as modules from '#/modules';
+import * as modules from './modules';
 import { logger } from './logger';
 
 /**

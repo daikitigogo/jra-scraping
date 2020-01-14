@@ -1,5 +1,5 @@
 import * as dtos from './result.dto';
-import * as entities from "#/share/entity/plain.entity";
+import * as entities from "../../share/entity/plain.entity";
 import {
     HorseMasterRepository,
     RaceDataRepository,
@@ -7,9 +7,9 @@ import {
     RefundRepository,
     SpecialityRaceRepository,
     TurfPlaceMasterRepository
- } from "#/share/repository/plain.repository";
+ } from "../../share/repository/plain.repository";
 import { Pool, Connection } from "mariadb";
-import { logger } from '#/logger';
+import { logger } from '../../logger';
 
 /**
  * 過去レース結果取得ジョブ - データベース関連サービス

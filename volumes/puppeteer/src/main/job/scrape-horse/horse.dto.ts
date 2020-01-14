@@ -1,4 +1,4 @@
-import {RaceData, RaceDetail, SpecialityRace, TurfPlaceMaster } from '#/share/entity/plain.entity';
+import {RaceData, RaceDetail, SpecialityRace, TurfPlaceMaster } from '../../share/entity/plain.entity';
 
 export class HorseDataDto {
     horseName: string;
