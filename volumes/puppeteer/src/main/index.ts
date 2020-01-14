@@ -14,8 +14,9 @@ const executeJob = async (jobName: string, params: string[]) => {
         case 'result':
             const arg = modules.resultScrapingJob.parseArgs(params);
             for (const month of arg.months) {
-                return await modules.resultScrapingJob.run(arg.year, month, arg.day);
+                await modules.resultScrapingJob.run(arg.year, month, arg.day);
             }
+            return;
         case 'horse':
             return await modules.horseScrapingJob.run();
         default:
