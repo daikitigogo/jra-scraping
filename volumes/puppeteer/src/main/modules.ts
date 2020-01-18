@@ -14,7 +14,7 @@ import { HorseScrapingJob } from './job/scrape-horse/horse.job';
 import { HorseDatabaseService } from './job/scrape-horse/horse.service';
 
 // 共通部品
-const puppetman = Puppetman.init({ args: [ '--no-sandbox', '--disable-setuid-sandbox' ], headless: Boolean(process.env.NODE_PUPPETEER_HEADLESS) || true });
+const puppetman = Puppetman.init({ args: [ '--no-sandbox', '--disable-setuid-sandbox' ] });
 const pool = mariadb.createPool({
     host: process.env.NODE_DB_HOST,
     database: process.env.NODE_DB_DATABASE,

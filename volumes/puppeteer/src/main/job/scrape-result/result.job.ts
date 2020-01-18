@@ -87,6 +87,7 @@ export class ResultScrapingJob {
             const entityList = dtoToEntity.convert(dateOfRace, turfPlaceCode, raceList);
 
             // DB反映
+            logger.info(`Regist start! turfPlaceName: ${target.turfPlaceName}.`);
             await this.databaseService.reflectAllEntity(entityList);
         }
     }

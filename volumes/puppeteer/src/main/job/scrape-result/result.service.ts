@@ -83,7 +83,7 @@ export class ResultDatabaseService {
 
         try {
             for (let i = 0; i < entityList.length; i++) {
-                logger.info(`Regist start! count: ${i + 1}/${entityList.length}`);
+                logger.info(`Count: ${i + 1}/${entityList.length}`);
                 await this.reflectEntity(conn, entityList[i]);
             }
             await conn.commit();

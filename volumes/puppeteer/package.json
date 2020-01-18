@@ -1,7 +1,7 @@
 {
-  "name": "node",
+  "name": "jra-scraping",
   "version": "1.0.0",
-  "description": "",
+  "description": "Scraping on jra site.",
   "main": "src/main/index.ts",
   "baseUrl": "./",
   "scripts": {
@@ -9,7 +9,7 @@
     "test": "jest"
   },
   "keywords": [],
-  "author": "",
+  "author": "daikitigogo",
   "license": "ISC",
   "devDependencies": {
     "@types/jest": "^24.0.25",
@@ -21,7 +21,6 @@
     "tsconfig-paths": "^3.9.0",
     "typescript": "^3.7.2"
   },
-  "private": true,
   "dependencies": {
     "@types/puppeteer": "^2.0.0",
     "@types/source-map-support": "^0.5.0",
@@ -47,9 +46,6 @@
     },
     "testMatch": [
       "**/test/**/*.test.ts"
-    ],
-    "moduleNameMapper": {
-      "^#/(.+)": "<rootDir>/src/main/$1"
-    }
+    ]
   }
 }

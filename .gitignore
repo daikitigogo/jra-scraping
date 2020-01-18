@@ -1,5 +1,6 @@
 node_modules/
 dist/
 *.log
-volumes/mariadb/*
-!volumes/mariadb/.gitkeep
+volumes/mariadb/mount/*
+!volumes/mariadb/mount/.gitkeep
+dockerfiles/puppeteer/initialized

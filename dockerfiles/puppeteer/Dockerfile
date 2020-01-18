@@ -22,16 +22,17 @@ RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key
 #     browser.launch({executablePath: 'google-chrome-unstable'})
 # ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD true
 
-ENV APP_ROOT=/app/
-COPY ./package*.json ${APP_ROOT}
+WORKDIR /app
 
-WORKDIR ${APP_ROOT}
+COPY ./startup.sh /bin/
+COPY ./bashrc /etc/
+RUN chmod 755 /bin/startup.sh
 
 # Install puppeteer so it's available in the container.
-RUN npm i puppeteer \
-    # Add user so we don't need --no-sandbox.
-    # same layer as npm install to keep re-chowned files from using up several hundred MBs more space
-    && groupadd -r pptruser && useradd -r -g pptruser -G audio,video pptruser \
-    && mkdir -p /home/pptruser/Downloads \
-    && chown -R pptruser:pptruser /home/pptruser \
-    && chown -R pptruser:pptruser ${APP_ROOT}/node_modules
+#RUN npm i puppeteer \
+    ## Add user so we don't need --no-sandbox.
+    ## same layer as npm install to keep re-chowned files from using up several hundred MBs more space
+    #&& groupadd -r pptruser && useradd -r -g pptruser -G audio,video pptruser \
+    #&& mkdir -p /home/pptruser/Downloads \
+    #&& chown -R pptruser:pptruser /home/pptruser \
+    #&& chown -R pptruser:pptruser ${APP_ROOT}/node_modules
