@@ -24,4 +24,3 @@ services:
         env_file: .env
         depends_on:
             - mariadb
-        command: /bin/startup.sh
