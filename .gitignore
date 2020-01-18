@@ -4,3 +4,4 @@ dist/
 volumes/mariadb/mount/*
 !volumes/mariadb/mount/.gitkeep
 dockerfiles/puppeteer/initialized
+.cache/
